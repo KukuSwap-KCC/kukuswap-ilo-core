@@ -1,0 +1,25 @@
+{
+  "name": "kukuswap-ilo-core",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "format:fix": "npx prettier --write 'contracts/**/*.sol'",
+    "format:lint": "npx prettier --check 'contracts/**/*.sol'",
+    "lint:check": "npx solhint contracts/**/*.sol  interfaces/**/*.sol"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.0",
+    "@nomiclabs/hardhat-waffle": "^2.0.0",
+    "@openzeppelin/contracts": "^3.4.0",
+    "chai": "^4.2.0",
+    "ethereum-waffle": "^3.0.0",
+    "ethers": "^5.0.0",
+    "hardhat": "^2.4.3",
+    "hardhat-abi-exporter": "^2.2.1",
+    "hardhat-contract-sizer": "^2.0.3",
+    "prettier": "^2.3.2",
+    "prettier-plugin-solidity": "^1.0.0-beta.16",
+    "solhint": "^3.3.6"
+  }
+}

@@ -1,0 +1,40 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lpToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_unlock_date",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_referral",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_fee_in_eth",
+        "type": "bool"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_withdrawer",
+        "type": "address"
+      }
+    ],
+    "name": "lockLPToken",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]
