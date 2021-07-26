@@ -4,6 +4,7 @@
 export type { Ownable } from "./Ownable";
 export type { ERC20 } from "./ERC20";
 export type { IERC20 } from "./IERC20";
+export type { ERC20Mock } from "./ERC20Mock";
 export type { PresaleHelper } from "./PresaleHelper";
 export type { IERC20 } from "./IERC20";
 export type { IERCBurn } from "./IERCBurn";
@@ -25,6 +26,7 @@ export type { KukuSwapStaking } from "./KukuSwapStaking";
 export { Ownable__factory } from "./factories/Ownable__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
 export { IERC20__factory } from "./factories/IERC20__factory";
+export { ERC20Mock__factory } from "./factories/ERC20Mock__factory";
 export { PresaleHelper__factory } from "./factories/PresaleHelper__factory";
 export { IERC20__factory } from "./factories/IERC20__factory";
 export { IERCBurn__factory } from "./factories/IERCBurn__factory";

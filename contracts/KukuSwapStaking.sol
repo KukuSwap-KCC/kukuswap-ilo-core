@@ -6,9 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
 
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
-contract KukuSwapStaking  is ERC20("MamaSwap Staking Token", "KUKU Shares"), Ownable {
+contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Ownable {
     using SafeMath for uint256;
     IERC20 public KUKU;
 
@@ -23,7 +24,7 @@ contract KukuSwapStaking  is ERC20("MamaSwap Staking Token", "KUKU Shares"), Own
     /// @notice index=>Distribution
     mapping(uint256 => Distribution) public distributions;
 
-    uint256 public lastDistributionIndex = 1;
+    uint256 public lastDistributionIndex;
 
     /// @notice  future index => (user => shares), shares for distribution
     mapping(uint256 => mapping(address => uint256)) public shares;
@@ -31,7 +32,7 @@ contract KukuSwapStaking  is ERC20("MamaSwap Staking Token", "KUKU Shares"), Own
     ///  @notice user => (claimed distribution => bool)
     mapping(address => mapping(uint256 => bool)) public claimed;
 
-    mapping (address => bool) public authorized;
+    mapping(address => bool) public authorized;
 
     /// @notice Define the KUKU token contract
     constructor(IERC20 _KUKU, IERC20 _WKCS) public {
@@ -70,9 +71,10 @@ contract KukuSwapStaking  is ERC20("MamaSwap Staking Token", "KUKU Shares"), Own
     // Unlocks the staked + gained KUKU and burns KUKU ST
     function leave(uint256 _share) external {
         //Distribute Rewards
-        _claim((msg.sender));
+        _claim(msg.sender);
         // Gets the amount of KUKU ST in existence
         uint256 totalShares = totalSupply();
+
         // Calculates the amount of KUKU the KUKU ST is worth
         uint256 what = _share.mul(KUKU.balanceOf(address(this))).div(totalShares);
 
@@ -106,7 +108,7 @@ contract KukuSwapStaking  is ERC20("MamaSwap Staking Token", "KUKU Shares"), Own
 
     /// @notice get latest share for distribution
     function getDistributionShareBalance(uint256 _distributionIndex, address _user) public view returns (uint256 share) {
-        uint256 i = 0;
+        uint256 i;
         for (i = _distributionIndex; i > 0; i--) {
             share = shares[i][_user];
 
@@ -118,8 +120,10 @@ contract KukuSwapStaking  is ERC20("MamaSwap Staking Token", "KUKU Shares"), Own
 
     /// @notice get reward amount
     function getRewardsAmount(address _user) external view returns (uint256 amountToClaim) {
-        for (uint256 i = 0; i <= lastDistributionIndex; i++) {
-            amountToClaim = _getRewardAmount(i, _user);
+        for (uint256 i = 1; i <= lastDistributionIndex; i++) {
+            if (!claimed[_user][i]) {
+                amountToClaim += _getRewardAmount(i, _user);
+            }
         }
     }
 
@@ -128,11 +132,12 @@ contract KukuSwapStaking  is ERC20("MamaSwap Staking Token", "KUKU Shares"), Own
         // Calculates the amount of KUKU the KUKU ST is worth
         amount = balanceOf(_user).mul(KUKU.balanceOf(address(this))).div(totalSupply());
     }
+
     /**
         only owner functions
     **/
 
-    function chaneAuthorized(address _user, bool isAuth) external onlyOwner {
+    function authorize(address _user, bool isAuth) external onlyOwner {
         authorized[_user] = isAuth;
     }
 
@@ -141,46 +146,44 @@ contract KukuSwapStaking  is ERC20("MamaSwap Staking Token", "KUKU Shares"), Own
         WKCS = IERC20(_wkcs);
     }
 
-    function _updateShares(address _user) internal {
-         shares[lastDistributionIndex+1][_user] = balanceOf(msg.sender);
+    /// @notice create Distribution from authorized user or contract. ILO for example
+    function createDistribution(uint256 _amount) external virtual isAuthorized {
+        Distribution memory d = Distribution(totalSupply(), _amount);
+
+        lastDistributionIndex = ++lastDistributionIndex;
+
+        distributions[lastDistributionIndex] = d;
+
+        WKCS.transferFrom(msg.sender, address(this), _amount);
     }
 
+    function _updateShares(address _user) internal {
+        shares[lastDistributionIndex + 1][_user] = balanceOf(_user);
+    }
 
     //claim distributions
     function _claim(address _user) internal {
         uint256 claimedAmount = 0;
 
         if (lastDistributionIndex != 0) {
-        for (uint256 i = 1; i <= lastDistributionIndex; i++) {
-            if (!claimed[_user][i]) {
-                claimedAmount = _getRewardAmount(i, _user);
+            for (uint256 i = 1; i <= lastDistributionIndex; i++) {
+                if (!claimed[_user][i]) {
+                    claimedAmount = _getRewardAmount(i, _user);
 
-                WKCS.transfer(msg.sender, claimedAmount);
+                    WKCS.transfer(msg.sender, claimedAmount);
 
-                claimed[_user][i] = true;
-            }
+                    claimed[_user][i] = true;
+                }
             }
         }
     }
-
 
     function _getRewardAmount(uint256 _distributionIndex, address _user) internal view returns (uint256 amountToClaim) {
         Distribution memory d = distributions[_distributionIndex];
         uint256 totalShares = d.shares;
         uint256 amount = d.amount;
         uint256 share = getDistributionShareBalance(_distributionIndex, _user);
+
         amountToClaim = share.mul(amount).div(totalShares);
     }
-
-    /// @notice create Distribution from authorized user or contract. ILO for example
-    function createDistribution(uint256 _amount) external virtual  isAuthorized{
-        Distribution memory d = Distribution(totalSupply(), _amount);
-  
-        lastDistributionIndex = lastDistributionIndex++;
-        
-        distributions[lastDistributionIndex] = d;
-     
-        WKCS.transferFrom(msg.sender, address(this), _amount);
-    }
-    
 }

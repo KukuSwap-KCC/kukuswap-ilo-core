@@ -20,41 +20,43 @@ import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
-interface KukuSwapStakingInterface extends ethers.utils.Interface {
+interface ERC20MockInterface extends ethers.utils.Interface {
   functions: {
-    "KUKU()": FunctionFragment;
-    "WKCS()": FunctionFragment;
+    "DELEGATION_TYPEHASH()": FunctionFragment;
+    "DOMAIN_TYPEHASH()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
-    "authorize(address,bool)": FunctionFragment;
-    "authorized(address)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "claimed(address,uint256)": FunctionFragment;
-    "createDistribution(uint256)": FunctionFragment;
+    "checkpoints(address,uint32)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "distributions(uint256)": FunctionFragment;
-    "enter(uint256)": FunctionFragment;
-    "getDistributionShareBalance(uint256,address)": FunctionFragment;
-    "getRewardsAmount(address)": FunctionFragment;
-    "getStakingAmount(address)": FunctionFragment;
+    "delegate(address)": FunctionFragment;
+    "delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "delegates(address)": FunctionFragment;
+    "getCurrentVotes(address)": FunctionFragment;
+    "getPriorVotes(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "lastDistributionIndex()": FunctionFragment;
-    "leave(uint256)": FunctionFragment;
+    "mint(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
+    "nonces(address)": FunctionFragment;
+    "numCheckpoints(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "shares(uint256,address)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "updateTokenAddress(address,address)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "KUKU", values?: undefined): string;
-  encodeFunctionData(functionFragment: "WKCS", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "DELEGATION_TYPEHASH",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "DOMAIN_TYPEHASH",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -63,60 +65,55 @@ interface KukuSwapStakingInterface extends ethers.utils.Interface {
     functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "authorize",
-    values: [string, boolean]
-  ): string;
-  encodeFunctionData(functionFragment: "authorized", values: [string]): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "claimed",
+    functionFragment: "checkpoints",
     values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "createDistribution",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "delegate", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "distributions",
-    values: [BigNumberish]
+    functionFragment: "delegateBySig",
+    values: [
+      string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
   ): string;
-  encodeFunctionData(functionFragment: "enter", values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: "delegates", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "getDistributionShareBalance",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getRewardsAmount",
+    functionFragment: "getCurrentVotes",
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "getStakingAmount",
-    values: [string]
+    functionFragment: "getPriorVotes",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "lastDistributionIndex",
-    values?: undefined
+    functionFragment: "mint",
+    values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "leave", values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "nonces", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "numCheckpoints",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "shares",
-    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -135,21 +132,20 @@ interface KukuSwapStakingInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "updateTokenAddress",
-    values: [string, string]
-  ): string;
 
-  decodeFunctionResult(functionFragment: "KUKU", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "WKCS", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "DELEGATION_TYPEHASH",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "DOMAIN_TYPEHASH",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "authorize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "authorized", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "claimed", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "createDistribution",
+    functionFragment: "checkpoints",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
@@ -157,39 +153,36 @@ interface KukuSwapStakingInterface extends ethers.utils.Interface {
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "delegate", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "distributions",
+    functionFragment: "delegateBySig",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "enter", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "delegates", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getDistributionShareBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getRewardsAmount",
+    functionFragment: "getCurrentVotes",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getStakingAmount",
+    functionFragment: "getPriorVotes",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "lastDistributionIndex",
+    functionFragment: "numCheckpoints",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "leave", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "shares", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -204,23 +197,23 @@ interface KukuSwapStakingInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateTokenAddress",
-    data: BytesLike
-  ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
+    "DelegateChanged(address,address,address)": EventFragment;
+    "DelegateVotesChanged(address,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DelegateChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DelegateVotesChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class KukuSwapStaking extends Contract {
+export class ERC20Mock extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -231,16 +224,16 @@ export class KukuSwapStaking extends Contract {
   removeAllListeners(eventName: EventFilter | string): this;
   removeListener(eventName: any, listener: Listener): this;
 
-  interface: KukuSwapStakingInterface;
+  interface: ERC20MockInterface;
 
   functions: {
-    KUKU(overrides?: CallOverrides): Promise<[string]>;
+    DELEGATION_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
 
-    "KUKU()"(overrides?: CallOverrides): Promise<[string]>;
+    "DELEGATION_TYPEHASH()"(overrides?: CallOverrides): Promise<[string]>;
 
-    WKCS(overrides?: CallOverrides): Promise<[string]>;
+    DOMAIN_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
 
-    "WKCS()"(overrides?: CallOverrides): Promise<[string]>;
+    "DOMAIN_TYPEHASH()"(overrides?: CallOverrides): Promise<[string]>;
 
     allowance(
       owner: string,
@@ -266,25 +259,6 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    authorize(
-      _user: string,
-      isAuth: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "authorize(address,bool)"(
-      _user: string,
-      isAuth: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    authorized(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    "authorized(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "balanceOf(address)"(
@@ -292,27 +266,17 @@ export class KukuSwapStaking extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    claimed(
+    checkpoints(
       arg0: string,
       arg1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    ): Promise<[number, BigNumber] & { fromBlock: number; votes: BigNumber }>;
 
-    "claimed(address,uint256)"(
+    "checkpoints(address,uint32)"(
       arg0: string,
       arg1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    createDistribution(
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "createDistribution(uint256)"(
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    ): Promise<[number, BigNumber] & { fromBlock: number; votes: BigNumber }>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
@@ -330,61 +294,64 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    distributions(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & { shares: BigNumber; amount: BigNumber }
-    >;
-
-    "distributions(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & { shares: BigNumber; amount: BigNumber }
-    >;
-
-    enter(
-      _amount: BigNumberish,
+    delegate(
+      delegatee: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "enter(uint256)"(
-      _amount: BigNumberish,
+    "delegate(address)"(
+      delegatee: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    getDistributionShareBalance(
-      _distributionIndex: BigNumberish,
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { share: BigNumber }>;
+    delegateBySig(
+      delegatee: string,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
-    "getDistributionShareBalance(uint256,address)"(
-      _distributionIndex: BigNumberish,
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { share: BigNumber }>;
+    "delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)"(
+      delegatee: string,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
-    getRewardsAmount(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amountToClaim: BigNumber }>;
+    delegates(delegator: string, overrides?: CallOverrides): Promise<[string]>;
 
-    "getRewardsAmount(address)"(
-      _user: string,
+    "delegates(address)"(
+      delegator: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amountToClaim: BigNumber }>;
+    ): Promise<[string]>;
 
-    getStakingAmount(
-      _user: string,
+    getCurrentVotes(
+      account: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amount: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
-    "getStakingAmount(address)"(
-      _user: string,
+    "getCurrentVotes(address)"(
+      account: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amount: BigNumber }>;
+    ): Promise<[BigNumber]>;
+
+    getPriorVotes(
+      account: string,
+      blockNumber: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "getPriorVotes(address,uint256)"(
+      account: string,
+      blockNumber: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     increaseAllowance(
       spender: string,
@@ -398,23 +365,35 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    lastDistributionIndex(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "lastDistributionIndex()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    leave(
-      _share: BigNumberish,
+    mint(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "leave(uint256)"(
-      _share: BigNumberish,
+    "mint(address,uint256)"(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
     "name()"(overrides?: CallOverrides): Promise<[string]>;
+
+    nonces(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "nonces(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    numCheckpoints(arg0: string, overrides?: CallOverrides): Promise<[number]>;
+
+    "numCheckpoints(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -423,18 +402,6 @@ export class KukuSwapStaking extends Contract {
     renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
 
     "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
-
-    shares(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "shares(uint256,address)"(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
@@ -479,27 +446,15 @@ export class KukuSwapStaking extends Contract {
       newOwner: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    updateTokenAddress(
-      _kuku: string,
-      _wkcs: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "updateTokenAddress(address,address)"(
-      _kuku: string,
-      _wkcs: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
   };
 
-  KUKU(overrides?: CallOverrides): Promise<string>;
+  DELEGATION_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-  "KUKU()"(overrides?: CallOverrides): Promise<string>;
+  "DELEGATION_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
 
-  WKCS(overrides?: CallOverrides): Promise<string>;
+  DOMAIN_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-  "WKCS()"(overrides?: CallOverrides): Promise<string>;
+  "DOMAIN_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
 
   allowance(
     owner: string,
@@ -525,25 +480,6 @@ export class KukuSwapStaking extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  authorize(
-    _user: string,
-    isAuth: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "authorize(address,bool)"(
-    _user: string,
-    isAuth: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  authorized(arg0: string, overrides?: CallOverrides): Promise<boolean>;
-
-  "authorized(address)"(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   "balanceOf(address)"(
@@ -551,27 +487,17 @@ export class KukuSwapStaking extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  claimed(
+  checkpoints(
     arg0: string,
     arg1: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<boolean>;
+  ): Promise<[number, BigNumber] & { fromBlock: number; votes: BigNumber }>;
 
-  "claimed(address,uint256)"(
+  "checkpoints(address,uint32)"(
     arg0: string,
     arg1: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  createDistribution(
-    _amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "createDistribution(uint256)"(
-    _amount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  ): Promise<[number, BigNumber] & { fromBlock: number; votes: BigNumber }>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -589,55 +515,62 @@ export class KukuSwapStaking extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  distributions(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { shares: BigNumber; amount: BigNumber }>;
-
-  "distributions(uint256)"(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { shares: BigNumber; amount: BigNumber }>;
-
-  enter(
-    _amount: BigNumberish,
+  delegate(
+    delegatee: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "enter(uint256)"(
-    _amount: BigNumberish,
+  "delegate(address)"(
+    delegatee: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  getDistributionShareBalance(
-    _distributionIndex: BigNumberish,
-    _user: string,
+  delegateBySig(
+    delegatee: string,
+    nonce: BigNumberish,
+    expiry: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)"(
+    delegatee: string,
+    nonce: BigNumberish,
+    expiry: BigNumberish,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  delegates(delegator: string, overrides?: CallOverrides): Promise<string>;
+
+  "delegates(address)"(
+    delegator: string,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getCurrentVotes(
+    account: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  "getDistributionShareBalance(uint256,address)"(
-    _distributionIndex: BigNumberish,
-    _user: string,
+  "getCurrentVotes(address)"(
+    account: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getRewardsAmount(
-    _user: string,
+  getPriorVotes(
+    account: string,
+    blockNumber: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  "getRewardsAmount(address)"(
-    _user: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getStakingAmount(
-    _user: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "getStakingAmount(address)"(
-    _user: string,
+  "getPriorVotes(address,uint256)"(
+    account: string,
+    blockNumber: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -653,23 +586,35 @@ export class KukuSwapStaking extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  lastDistributionIndex(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "lastDistributionIndex()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  leave(
-    _share: BigNumberish,
+  mint(
+    _to: string,
+    _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "leave(uint256)"(
-    _share: BigNumberish,
+  "mint(address,uint256)"(
+    _to: string,
+    _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
   "name()"(overrides?: CallOverrides): Promise<string>;
+
+  nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "nonces(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  numCheckpoints(arg0: string, overrides?: CallOverrides): Promise<number>;
+
+  "numCheckpoints(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<number>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -678,18 +623,6 @@ export class KukuSwapStaking extends Contract {
   renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
 
   "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
-
-  shares(
-    arg0: BigNumberish,
-    arg1: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "shares(uint256,address)"(
-    arg0: BigNumberish,
-    arg1: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -735,26 +668,14 @@ export class KukuSwapStaking extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  updateTokenAddress(
-    _kuku: string,
-    _wkcs: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "updateTokenAddress(address,address)"(
-    _kuku: string,
-    _wkcs: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
   callStatic: {
-    KUKU(overrides?: CallOverrides): Promise<string>;
+    DELEGATION_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-    "KUKU()"(overrides?: CallOverrides): Promise<string>;
+    "DELEGATION_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
 
-    WKCS(overrides?: CallOverrides): Promise<string>;
+    DOMAIN_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-    "WKCS()"(overrides?: CallOverrides): Promise<string>;
+    "DOMAIN_TYPEHASH()"(overrides?: CallOverrides): Promise<string>;
 
     allowance(
       owner: string,
@@ -780,25 +701,6 @@ export class KukuSwapStaking extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    authorize(
-      _user: string,
-      isAuth: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "authorize(address,bool)"(
-      _user: string,
-      isAuth: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    authorized(arg0: string, overrides?: CallOverrides): Promise<boolean>;
-
-    "authorized(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "balanceOf(address)"(
@@ -806,27 +708,17 @@ export class KukuSwapStaking extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    claimed(
+    checkpoints(
       arg0: string,
       arg1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<[number, BigNumber] & { fromBlock: number; votes: BigNumber }>;
 
-    "claimed(address,uint256)"(
+    "checkpoints(address,uint32)"(
       arg0: string,
       arg1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    createDistribution(
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "createDistribution(uint256)"(
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<[number, BigNumber] & { fromBlock: number; votes: BigNumber }>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -844,56 +736,59 @@ export class KukuSwapStaking extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    distributions(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & { shares: BigNumber; amount: BigNumber }
-    >;
+    delegate(delegatee: string, overrides?: CallOverrides): Promise<void>;
 
-    "distributions(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & { shares: BigNumber; amount: BigNumber }
-    >;
-
-    enter(_amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    "enter(uint256)"(
-      _amount: BigNumberish,
+    "delegate(address)"(
+      delegatee: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getDistributionShareBalance(
-      _distributionIndex: BigNumberish,
-      _user: string,
+    delegateBySig(
+      delegatee: string,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)"(
+      delegatee: string,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    delegates(delegator: string, overrides?: CallOverrides): Promise<string>;
+
+    "delegates(address)"(
+      delegator: string,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getCurrentVotes(
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getDistributionShareBalance(uint256,address)"(
-      _distributionIndex: BigNumberish,
-      _user: string,
+    "getCurrentVotes(address)"(
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getRewardsAmount(
-      _user: string,
+    getPriorVotes(
+      account: string,
+      blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getRewardsAmount(address)"(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getStakingAmount(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getStakingAmount(address)"(
-      _user: string,
+    "getPriorVotes(address,uint256)"(
+      account: string,
+      blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -909,20 +804,35 @@ export class KukuSwapStaking extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    lastDistributionIndex(overrides?: CallOverrides): Promise<BigNumber>;
+    mint(
+      _to: string,
+      _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    "lastDistributionIndex()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    leave(_share: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    "leave(uint256)"(
-      _share: BigNumberish,
+    "mint(address,uint256)"(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
     "name()"(overrides?: CallOverrides): Promise<string>;
+
+    nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    numCheckpoints(arg0: string, overrides?: CallOverrides): Promise<number>;
+
+    "numCheckpoints(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<number>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -931,18 +841,6 @@ export class KukuSwapStaking extends Contract {
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     "renounceOwnership()"(overrides?: CallOverrides): Promise<void>;
-
-    shares(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "shares(uint256,address)"(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -987,18 +885,6 @@ export class KukuSwapStaking extends Contract {
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    updateTokenAddress(
-      _kuku: string,
-      _wkcs: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "updateTokenAddress(address,address)"(
-      _kuku: string,
-      _wkcs: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
   };
 
   filters: {
@@ -1006,6 +892,18 @@ export class KukuSwapStaking extends Contract {
       owner: string | null,
       spender: string | null,
       value: null
+    ): EventFilter;
+
+    DelegateChanged(
+      delegator: string | null,
+      fromDelegate: string | null,
+      toDelegate: string | null
+    ): EventFilter;
+
+    DelegateVotesChanged(
+      delegate: string | null,
+      previousBalance: null,
+      newBalance: null
     ): EventFilter;
 
     OwnershipTransferred(
@@ -1017,13 +915,13 @@ export class KukuSwapStaking extends Contract {
   };
 
   estimateGas: {
-    KUKU(overrides?: CallOverrides): Promise<BigNumber>;
+    DELEGATION_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "KUKU()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "DELEGATION_TYPEHASH()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    WKCS(overrides?: CallOverrides): Promise<BigNumber>;
+    DOMAIN_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "WKCS()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "DOMAIN_TYPEHASH()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: string,
@@ -1049,25 +947,6 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    authorize(
-      _user: string,
-      isAuth: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "authorize(address,bool)"(
-      _user: string,
-      isAuth: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    authorized(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "authorized(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "balanceOf(address)"(
@@ -1075,26 +954,16 @@ export class KukuSwapStaking extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    claimed(
+    checkpoints(
       arg0: string,
       arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "claimed(address,uint256)"(
+    "checkpoints(address,uint32)"(
       arg0: string,
       arg1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    createDistribution(
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "createDistribution(uint256)"(
-      _amount: BigNumberish,
-      overrides?: Overrides
     ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1113,52 +982,59 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    distributions(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    delegate(delegatee: string, overrides?: Overrides): Promise<BigNumber>;
 
-    "distributions(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    enter(_amount: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
-
-    "enter(uint256)"(
-      _amount: BigNumberish,
+    "delegate(address)"(
+      delegatee: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    getDistributionShareBalance(
-      _distributionIndex: BigNumberish,
-      _user: string,
+    delegateBySig(
+      delegatee: string,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)"(
+      delegatee: string,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    delegates(delegator: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "delegates(address)"(
+      delegator: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getDistributionShareBalance(uint256,address)"(
-      _distributionIndex: BigNumberish,
-      _user: string,
+    getCurrentVotes(
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getRewardsAmount(
-      _user: string,
+    "getCurrentVotes(address)"(
+      account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getRewardsAmount(address)"(
-      _user: string,
+    getPriorVotes(
+      account: string,
+      blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getStakingAmount(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getStakingAmount(address)"(
-      _user: string,
+    "getPriorVotes(address,uint256)"(
+      account: string,
+      blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1174,20 +1050,35 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    lastDistributionIndex(overrides?: CallOverrides): Promise<BigNumber>;
+    mint(
+      _to: string,
+      _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
-    "lastDistributionIndex()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    leave(_share: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
-
-    "leave(uint256)"(
-      _share: BigNumberish,
+    "mint(address,uint256)"(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nonces(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    numCheckpoints(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "numCheckpoints(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1196,18 +1087,6 @@ export class KukuSwapStaking extends Contract {
     renounceOwnership(overrides?: Overrides): Promise<BigNumber>;
 
     "renounceOwnership()"(overrides?: Overrides): Promise<BigNumber>;
-
-    shares(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "shares(uint256,address)"(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1252,28 +1131,22 @@ export class KukuSwapStaking extends Contract {
       newOwner: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
-
-    updateTokenAddress(
-      _kuku: string,
-      _wkcs: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "updateTokenAddress(address,address)"(
-      _kuku: string,
-      _wkcs: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    KUKU(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    DELEGATION_TYPEHASH(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    "KUKU()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "DELEGATION_TYPEHASH()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    WKCS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    DOMAIN_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "WKCS()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    "DOMAIN_TYPEHASH()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     allowance(
       owner: string,
@@ -1299,28 +1172,6 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    authorize(
-      _user: string,
-      isAuth: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "authorize(address,bool)"(
-      _user: string,
-      isAuth: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    authorized(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "authorized(address)"(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     balanceOf(
       account: string,
       overrides?: CallOverrides
@@ -1331,26 +1182,16 @@ export class KukuSwapStaking extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    claimed(
+    checkpoints(
       arg0: string,
       arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "claimed(address,uint256)"(
+    "checkpoints(address,uint32)"(
       arg0: string,
       arg1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    createDistribution(
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "createDistribution(uint256)"(
-      _amount: BigNumberish,
-      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1369,55 +1210,65 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    distributions(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "distributions(uint256)"(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    enter(
-      _amount: BigNumberish,
+    delegate(
+      delegatee: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "enter(uint256)"(
-      _amount: BigNumberish,
+    "delegate(address)"(
+      delegatee: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    getDistributionShareBalance(
-      _distributionIndex: BigNumberish,
-      _user: string,
+    delegateBySig(
+      delegatee: string,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)"(
+      delegatee: string,
+      nonce: BigNumberish,
+      expiry: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    delegates(
+      delegator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getDistributionShareBalance(uint256,address)"(
-      _distributionIndex: BigNumberish,
-      _user: string,
+    "delegates(address)"(
+      delegator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getRewardsAmount(
-      _user: string,
+    getCurrentVotes(
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getRewardsAmount(address)"(
-      _user: string,
+    "getCurrentVotes(address)"(
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getStakingAmount(
-      _user: string,
+    getPriorVotes(
+      account: string,
+      blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getStakingAmount(address)"(
-      _user: string,
+    "getPriorVotes(address,uint256)"(
+      account: string,
+      blockNumber: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1433,27 +1284,41 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    lastDistributionIndex(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "lastDistributionIndex()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    leave(
-      _share: BigNumberish,
+    mint(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "leave(uint256)"(
-      _share: BigNumberish,
+    "mint(address,uint256)"(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nonces(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "nonces(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    numCheckpoints(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "numCheckpoints(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1462,18 +1327,6 @@ export class KukuSwapStaking extends Contract {
     renounceOwnership(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     "renounceOwnership()"(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    shares(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "shares(uint256,address)"(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1516,18 +1369,6 @@ export class KukuSwapStaking extends Contract {
 
     "transferOwnership(address)"(
       newOwner: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    updateTokenAddress(
-      _kuku: string,
-      _wkcs: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "updateTokenAddress(address,address)"(
-      _kuku: string,
-      _wkcs: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
