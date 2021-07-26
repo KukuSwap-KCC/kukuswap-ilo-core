@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
-contract MamaStaking is ERC20("MamaSwap Staking Token", "MAMA ST"), Ownable {
+contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Ownable {
     using SafeMath for uint256;
     IERC20 public KUKU;
 
