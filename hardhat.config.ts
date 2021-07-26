@@ -2,6 +2,7 @@ import "hardhat-typechain"
 import "@nomiclabs/hardhat-waffle"
 import "hardhat-contract-sizer"
 import "hardhat-abi-exporter"
+import "hardhat-gas-reporter"
 import { HardhatUserConfig } from "hardhat/types"
 
 // You need to export an object to set up your config
@@ -14,6 +15,10 @@ const config: HardhatUserConfig = {
     flat: true,
     // only: [],
     // except: []
+  },
+  gasReporter: {
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    currency: "ETH",
   },
   defaultNetwork: "hardhat",
   mocha: {
