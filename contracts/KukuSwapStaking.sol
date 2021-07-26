@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "hardhat/console.sol";
+
 
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
 contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Ownable {
@@ -90,6 +90,7 @@ contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Owna
     function transfer(address recipient, uint256 amount) public override returns (bool) {
         super.transfer(recipient, amount);
         _updateShares(msg.sender);
+        _updateShares(recipient);
     }
 
     /// @notice override transferFrom. update shares for  user after
@@ -100,6 +101,7 @@ contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Owna
     ) public override returns (bool) {
         super.transferFrom(sender, recipient, amount);
         _updateShares(sender);
+        _updateShares(recipient);
     }
 
     /*

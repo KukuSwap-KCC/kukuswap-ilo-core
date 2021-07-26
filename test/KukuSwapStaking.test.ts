@@ -158,14 +158,28 @@ describe("KukuSwapStaking", function () {
         expect(shares).to.equal("180");
         expect(distribution.amount).to.equal("200");
         expect(distribution.shares).to.equal("80");
-
+        
         expect(await this.staking.getRewardsAmount(this.alice.address)).to.equal("200");
         expect(await this.staking.getStakingAmount(this.alice.address)).to.equal("180");
-        await this.staking.leave("10");
-        expect(await this.WKCS.balanceOf(this.alice.address)).to.equal("300");
+       
+
+        await this.staking.transfer(this.bob.address, "90")
+
+        expect(await this.staking.shares(
+            lastDistributionIndex.add("1"),
+            this.alice.address)).to.equal("90")
+        
+        expect(await this.staking.shares(
+                lastDistributionIndex.add("1"),
+                this.bob.address)).to.equal("90")
+        
 
         await this.staking.leave("10");
         expect(await this.WKCS.balanceOf(this.alice.address)).to.equal("300");
+        
+        await this.staking.leave("10");
+        expect(await this.WKCS.balanceOf(this.alice.address)).to.equal("300");      
+        
     });
 
     it("should claim one distribution with more than one participant", async function () {
