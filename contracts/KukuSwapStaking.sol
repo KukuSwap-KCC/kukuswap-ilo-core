@@ -61,6 +61,7 @@ contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Owna
 
         _mint(msg.sender, what);
 
+
         // Lock the KUKU in the contract
         KUKU.transferFrom(msg.sender, address(this), _amount);
 
@@ -81,6 +82,11 @@ contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Owna
         _burn(msg.sender, _share);
 
         //transfer KUKU
+
+        if (what >= KUKU.balanceOf(address(this))) {
+            what = KUKU.balanceOf(address(this));
+        }
+
         KUKU.transfer(msg.sender, what);
 
         _updateShares(msg.sender);
@@ -171,6 +177,10 @@ contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Owna
             for (uint256 i = 1; i <= lastDistributionIndex; i++) {
                 if (!claimed[_user][i]) {
                     claimedAmount = _getRewardAmount(i, _user);
+
+                    if (claimedAmount >= WKCS.balanceOf(address(this))) {
+                        claimedAmount = WKCS.balanceOf(address(this));
+                    }
 
                     WKCS.transfer(msg.sender, claimedAmount);
 
