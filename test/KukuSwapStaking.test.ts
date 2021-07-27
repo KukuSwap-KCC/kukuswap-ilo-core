@@ -21,11 +21,11 @@ describe("KukuSwapStaking", function () {
 
         await this.staking.initialize(this.kuku.address, this.WKCS.address)
 
-        this.kuku.mint(this.alice.address, "1000");
-        this.kuku.mint(this.bob.address, "100");
-        this.kuku.mint(this.carol.address, "100");
-        this.WKCS.mint(this.minter.address, "1000");
-        this.staking.authorize(this.minter.address, true);
+        await this.kuku.mint(this.alice.address, "1000");
+        await this.kuku.mint(this.bob.address, "100");
+        await this.kuku.mint(this.carol.address, "100");
+        await this.WKCS.mint(this.minter.address, "1000");
+        await this.staking.authorize(this.minter.address, true);
     });
 
     it("should not allow enter if not enough approve", async function () {
@@ -45,12 +45,16 @@ describe("KukuSwapStaking", function () {
         );
     });
 
-    it("should only owner can authrizize address", async function () {
+    it("should only owner cor authorized can authorize address", async function () {
         await expect(this.staking.connect(this.bob).authorize(this.bob.address, true)).to.be.revertedWith(
-            "Ownable: caller is not the owner"
+            "KukuSwap Staking: not authorized user"
         );
     });
 
+    it("should authorized can authorize new address", async function () {
+        await this.staking.authorize(this.bob.address, true);
+        await this.staking.connect(this.bob).authorize(this.carol.address, true)
+    });
 
     it("should not allow withraw more than what you have", async function () {
         await this.kuku.approve(this.staking.address, "100");
