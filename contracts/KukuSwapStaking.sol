@@ -39,10 +39,10 @@ contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Owna
         KUKU = _KUKU;
         WKCS = _WKCS;
     }
-//await
 
+    //await
     modifier isAuthorized() {
-        require(authorized[msg.sender], "KukuSwap Stakuing: not authorized user");
+        require(authorized[msg.sender], "KukuSwap Staking: not authorized user");
         _;
     }
 

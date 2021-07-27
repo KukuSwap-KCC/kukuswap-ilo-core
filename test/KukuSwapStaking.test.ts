@@ -30,7 +30,7 @@ describe("KukuSwapStaking", function () {
 
     it("should not allow enter if not enough approve", async function () {
         await expect(this.staking.enter("100")).to.be.reverted;
-        
+
         await this.kuku.approve(this.staking.address, "50");
         await expect(this.staking.enter("100")).to.be.reverted;
 
@@ -38,6 +38,19 @@ describe("KukuSwapStaking", function () {
         await this.staking.enter("100");
         expect(await this.staking.balanceOf(this.alice.address)).to.equal("100");
     });
+
+    it("should not allow create distribution from non-authirized", async function () {
+        await expect(this.staking.connect(this.bob).createDistribution("100")).to.be.revertedWith(
+            "KukuSwap Staking: not authorized user"
+        );
+    });
+
+    it("should only owner can authrizize address", async function () {
+        await expect(this.staking.connect(this.bob).authorize(this.bob.address, true)).to.be.revertedWith(
+            "Ownable: caller is not the owner"
+        );
+    });
+
 
     it("should not allow withraw more than what you have", async function () {
         await this.kuku.approve(this.staking.address, "100");
