@@ -3,16 +3,13 @@
 pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/proxy/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
 
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
-contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Ownable, Initializable {
-    using SafeMath for uint256;
+contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {    
     IERC20 public KUKU;
-
     IERC20 public WKCS;
 
     /// @notice struct for store distributin
@@ -38,6 +35,9 @@ contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Owna
     function initialize(IERC20 _KUKU, IERC20 _WKCS) public initializer {
         KUKU = _KUKU;
         WKCS = _WKCS;
+
+        ERC20Upgradeable.__ERC20_init("KukuSwap Staking Token", "KUKU Shares");
+        OwnableUpgradeable.__Ownable_init();
     }
 
     //await
