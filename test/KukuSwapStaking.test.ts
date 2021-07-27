@@ -17,10 +17,10 @@ describe("KukuSwapStaking", function () {
     beforeEach(async function () {
         this.kuku = await this.KukuToken.deploy();
         this.WKCS = await this.WKCSToken.deploy();
-        this.staking = await this.KukuSwapStaking.deploy(
-            this.kuku.address,
-            this.WKCS.address
-        );
+        this.staking = await this.KukuSwapStaking.deploy();
+
+        await this.staking.initialize(this.kuku.address, this.WKCS.address)
+
         this.kuku.mint(this.alice.address, "1000");
         this.kuku.mint(this.bob.address, "100");
         this.kuku.mint(this.carol.address, "100");
@@ -29,13 +29,11 @@ describe("KukuSwapStaking", function () {
     });
 
     it("should not allow enter if not enough approve", async function () {
-        await expect(this.staking.enter("100")).to.be.revertedWith(
-            "ERC20: transfer amount exceeds allowance"
-        );
+        await expect(this.staking.enter("100")).to.be.reverted;
+        
         await this.kuku.approve(this.staking.address, "50");
-        await expect(this.staking.enter("100")).to.be.revertedWith(
-            "ERC20: transfer amount exceeds allowance"
-        );
+        await expect(this.staking.enter("100")).to.be.reverted;
+
         await this.kuku.approve(this.staking.address, "100");
         await this.staking.enter("100");
         expect(await this.staking.balanceOf(this.alice.address)).to.equal("100");

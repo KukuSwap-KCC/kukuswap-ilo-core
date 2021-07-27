@@ -6,10 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
+import "@openzeppelin/contracts/proxy/Initializable.sol";
 
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
-contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Ownable {
+contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Ownable, Initializable {
     using SafeMath for uint256;
     IERC20 public KUKU;
 
@@ -34,11 +34,12 @@ contract KukuSwapStaking is ERC20("MamaSwap Staking Token", "KUKU Shares"), Owna
 
     mapping(address => bool) public authorized;
 
-    /// @notice Define the KUKU token contract
-    constructor(IERC20 _KUKU, IERC20 _WKCS) public {
+    /// @notice Define the KUKU and WKCS token contract
+    function initialize(IERC20 _KUKU, IERC20 _WKCS) public initializer {
         KUKU = _KUKU;
         WKCS = _WKCS;
     }
+//await
 
     modifier isAuthorized() {
         require(authorized[msg.sender], "KukuSwap Stakuing: not authorized user");

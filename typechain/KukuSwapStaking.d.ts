@@ -39,6 +39,7 @@ interface KukuSwapStakingInterface extends ethers.utils.Interface {
     "getRewardsAmount(address)": FunctionFragment;
     "getStakingAmount(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
+    "initialize(address,address)": FunctionFragment;
     "lastDistributionIndex()": FunctionFragment;
     "leave(uint256)": FunctionFragment;
     "name()": FunctionFragment;
@@ -102,6 +103,10 @@ interface KukuSwapStakingInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "lastDistributionIndex",
@@ -178,6 +183,7 @@ interface KukuSwapStakingInterface extends ethers.utils.Interface {
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "lastDistributionIndex",
     data: BytesLike
@@ -395,6 +401,18 @@ export class KukuSwapStaking extends Contract {
     "increaseAllowance(address,uint256)"(
       spender: string,
       addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    initialize(
+      _KUKU: string,
+      _WKCS: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "initialize(address,address)"(
+      _KUKU: string,
+      _WKCS: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -653,6 +671,18 @@ export class KukuSwapStaking extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  initialize(
+    _KUKU: string,
+    _WKCS: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "initialize(address,address)"(
+    _KUKU: string,
+    _WKCS: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   lastDistributionIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
   "lastDistributionIndex()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -908,6 +938,18 @@ export class KukuSwapStaking extends Contract {
       addedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    initialize(
+      _KUKU: string,
+      _WKCS: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "initialize(address,address)"(
+      _KUKU: string,
+      _WKCS: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     lastDistributionIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1174,6 +1216,18 @@ export class KukuSwapStaking extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    initialize(
+      _KUKU: string,
+      _WKCS: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "initialize(address,address)"(
+      _KUKU: string,
+      _WKCS: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     lastDistributionIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
     "lastDistributionIndex()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1430,6 +1484,18 @@ export class KukuSwapStaking extends Contract {
     "increaseAllowance(address,uint256)"(
       spender: string,
       addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _KUKU: string,
+      _WKCS: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "initialize(address,address)"(
+      _KUKU: string,
+      _WKCS: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

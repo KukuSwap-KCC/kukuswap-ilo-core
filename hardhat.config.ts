@@ -17,7 +17,7 @@ const config: HardhatUserConfig = {
     // except: []
   },
   gasReporter: {
-    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    coinmarketcap: '',
     currency: "ETH",
   },
   defaultNetwork: "hardhat",
