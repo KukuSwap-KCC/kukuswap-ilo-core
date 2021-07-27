@@ -1,1 +1,1 @@
-# KukuSwap Initial Coin Offerings Contracts
+# KukuSwap Staking and ILO contracts
