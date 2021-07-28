@@ -1040,9 +1040,8 @@ pragma solidity 0.6.12;
 // import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 // import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
-contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {    
+contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     IERC20 public KUKU;
     IERC20 public WKCS;
 
@@ -1076,7 +1075,12 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
 
     //await
     modifier isAuthorized() {
-        require(authorized[msg.sender], "KukuSwap Staking: not authorized user");
+        require(authorized[_msgSender()], "KukuSwap Staking: not authorized user");
+        _;
+    }
+
+    modifier isOnlyOwnerOrAuthorized() {
+        require((authorized[_msgSender()] || owner() == _msgSender()), "KukuSwap Staking: not authorized user");
         _;
     }
 
@@ -1094,27 +1098,26 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
             what = _amount.mul(totalShares).div(totalKUKU);
         }
 
-        _mint(msg.sender, what);
-
+        _mint(_msgSender(), what);
 
         // Lock the KUKU in the contract
-        KUKU.transferFrom(msg.sender, address(this), _amount);
+        KUKU.transferFrom(_msgSender(), address(this), _amount);
 
-        _updateShares(msg.sender);
+        _updateShares(_msgSender());
     }
 
     /// @notice  Leave the staking. Claim back your KUKUs.
     // Unlocks the staked + gained KUKU and burns KUKU ST
     function leave(uint256 _share) external {
         //Distribute Rewards
-        _claim(msg.sender);
+        _claim(_msgSender());
         // Gets the amount of KUKU ST in existence
         uint256 totalShares = totalSupply();
 
         // Calculates the amount of KUKU the KUKU ST is worth
         uint256 what = _share.mul(KUKU.balanceOf(address(this))).div(totalShares);
 
-        _burn(msg.sender, _share);
+        _burn(_msgSender(), _share);
 
         //transfer KUKU
 
@@ -1122,15 +1125,15 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
             what = KUKU.balanceOf(address(this));
         }
 
-        KUKU.transfer(msg.sender, what);
+        KUKU.transfer(_msgSender(), what);
 
-        _updateShares(msg.sender);
+        _updateShares(_msgSender());
     }
 
     /// @notice override transfer. update shares for  user after
     function transfer(address recipient, uint256 amount) public override returns (bool) {
         super.transfer(recipient, amount);
-        _updateShares(msg.sender);
+        _updateShares(_msgSender());
         _updateShares(recipient);
     }
 
@@ -1180,7 +1183,7 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
         only owner functions
     **/
 
-    function authorize(address _user, bool isAuth) external onlyOwner {
+    function authorize(address _user, bool isAuth) external isOnlyOwnerOrAuthorized {
         authorized[_user] = isAuth;
     }
 
@@ -1197,7 +1200,7 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
 
         distributions[lastDistributionIndex] = d;
 
-        WKCS.transferFrom(msg.sender, address(this), _amount);
+        WKCS.transferFrom(_msgSender(), address(this), _amount);
     }
 
     function _updateShares(address _user) internal {
@@ -1217,7 +1220,7 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
                         claimedAmount = WKCS.balanceOf(address(this));
                     }
 
-                    WKCS.transfer(msg.sender, claimedAmount);
+                    WKCS.transfer(_msgSender(), claimedAmount);
 
                     claimed[_user][i] = true;
                 }
@@ -1231,6 +1234,8 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
         uint256 amount = d.amount;
         uint256 share = getDistributionShareBalance(_distributionIndex, _user);
 
-        amountToClaim = share.mul(amount).div(totalShares);
+        if (share > 0) {
+            amountToClaim = share.mul(amount).div(totalShares);
+        }
     }
 }
