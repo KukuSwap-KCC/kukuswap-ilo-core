@@ -314,32 +314,98 @@ abstract contract Ownable is Context {
 }
 
 
+// Dependency file: @openzeppelin/contracts/token/ERC20/IERC20.sol
+
+
+// pragma solidity >=0.6.0 <0.8.0;
+
+/**
+ * @dev Interface of the ERC20 standard as defined in the EIP.
+ */
+interface IERC20 {
+    /**
+     * @dev Returns the amount of tokens in existence.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external view returns (uint256);
+
+    /**
+     * @dev Moves `amount` tokens from the caller's account to `recipient`.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transfer(address recipient, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Returns the remaining number of tokens that `spender` will be
+     * allowed to spend on behalf of `owner` through {transferFrom}. This is
+     * zero by default.
+     *
+     * This value changes when {approve} or {transferFrom} are called.
+     */
+    function allowance(address owner, address spender) external view returns (uint256);
+
+    /**
+     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * IMPORTANT: Beware that changing an allowance with this method brings the risk
+     * that someone may use both the old and the new allowance by unfortunate
+     * transaction ordering. One possible solution to mitigate this race
+     * condition is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     *
+     * Emits an {Approval} event.
+     */
+    function approve(address spender, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Moves `amount` tokens from `sender` to `recipient` using the
+     * allowance mechanism. `amount` is then deducted from the caller's
+     * allowance.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Emitted when `value` tokens are moved from one account (`from`) to
+     * another (`to`).
+     *
+     * Note that `value` may be zero.
+     */
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    /**
+     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+     * a call to {approve}. `value` is the new allowance.
+     */
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+}
+
+
 // Dependency file: contracts/interfaces/IERC20Ext.sol
 
 
 // pragma solidity 0.6.12;
 
-interface IERC20Ext {
+// import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+interface IERC20Ext is IERC20 {
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     function decimals() external view returns (uint8);
-
-    function totalSupply() external view returns (uint256);
-
-    function balanceOf(address owner) external view returns (uint256);
-
-    function allowance(address owner, address spender) external view returns (uint256);
-
-    function approve(address spender, uint256 value) external returns (bool);
-
-    function transfer(address to, uint256 value) external returns (bool);
-
-    function transferFrom(
-        address from,
-        address to,
-        uint256 value
-    ) external returns (bool);
 }
 
 
@@ -498,15 +564,9 @@ interface IKukuSwapPresaleSettings {
 
     function userHoldsSufficientRound1Token(address _user) external view returns (bool);
 
-    function referrerIsValid(address _referrer) external view returns (bool);
-
     function getBaseFee() external view returns (uint256);
 
-    function getKCSCreationFeeAddress() external view returns (address payable);
-
     function getStakingAddress() external view returns (address payable);
-
-    function getKCSCreationFee() external view returns (uint256);
 }
 
 
@@ -930,7 +990,7 @@ contract KukuSwapPresale is ReentrancyGuard {
     }
 
     struct PresaleFeeInfo {
-        uint256 kuku_BASE_FEE; // divided by 1000
+        uint256 KUKU_BASE_FEE; // divided by 1000
         address payable BASE_FEE_ADDRESS;
         address payable TOKEN_FEE_ADDRESS;
     }
@@ -1012,7 +1072,7 @@ contract KukuSwapPresale is ReentrancyGuard {
         PRESALE_INFO.PRESALE_IN_KCS = address(_baseToken) == address(WKCS);
         PRESALE_INFO.S_TOKEN = _presaleToken;
         PRESALE_INFO.B_TOKEN = _baseToken;
-        PRESALE_FEE_INFO.kuku_BASE_FEE = _kukuBaseFee;
+        PRESALE_FEE_INFO.KUKU_BASE_FEE = _kukuBaseFee;
 
         PRESALE_FEE_INFO.BASE_FEE_ADDRESS = _baseFeeAddress;
 
@@ -1151,7 +1211,7 @@ contract KukuSwapPresale is ReentrancyGuard {
             return;
         }
 
-        uint256 kukuBaseFee = STATUS.TOTAL_BASE_COLLECTED.mul(PRESALE_FEE_INFO.kuku_BASE_FEE).div(1000);
+        uint256 kukuBaseFee = STATUS.TOTAL_BASE_COLLECTED.mul(PRESALE_FEE_INFO.KUKU_BASE_FEE).div(1000);
 
         // base token liquidity
         uint256 baseLiquidity = STATUS.TOTAL_BASE_COLLECTED.sub(kukuBaseFee).mul(PRESALE_INFO.LIQUIDITY_PERCENT).div(1000);
@@ -1309,10 +1369,6 @@ contract KukuSwapPresaleGenerator is Ownable {
         if (params.lockPeriod < 4 weeks) {
             params.lockPeriod = 4 weeks;
         }
-
-        // Charge KCS fee for contract creation
-        require(msg.value == PRESALE_SETTINGS.getKCSCreationFee(), "FEE NOT MET");
-        PRESALE_SETTINGS.getKCSCreationFeeAddress().transfer(PRESALE_SETTINGS.getKCSCreationFee());
 
         require(params.amount >= 10000, "MIN DIVIS"); // minimum divisibility
         require(params.endblock.sub(params.startblock) <= PRESALE_SETTINGS.getMaxPresaleLength());

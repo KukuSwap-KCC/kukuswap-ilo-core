@@ -79,10 +79,10 @@ interface IERC20 {
 }
 
 
-// Dependency file: contracts/interfaces/IERC20Ext.sol
+// Root file: contracts/interfaces/IERC20Ext.sol
 
 
-// pragma solidity 0.6.12;
+pragma solidity 0.6.12;
 
 // import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -91,25 +91,4 @@ interface IERC20Ext is IERC20 {
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     function decimals() external view returns (uint8);
-}
-
-
-// Root file: contracts/interfaces/IKukuSwapPresaleLockForwarder.sol
-
-
-pragma solidity 0.6.12;
-
-// import "contracts/interfaces/IERC20Ext.sol";
-
-interface IKukuSwapPresaleLockForwarder {
-    function lockLiquidity(
-        IERC20Ext _baseToken,
-        IERC20Ext _saleToken,
-        uint256 _baseAmount,
-        uint256 _saleAmount,
-        uint256 _unlock_date,
-        address payable _withdrawer
-    ) external;
-
-    function kukuswapPairIsInitialised(address _token0, address _token1) external view returns (bool);
 }

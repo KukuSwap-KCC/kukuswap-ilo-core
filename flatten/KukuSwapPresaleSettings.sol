@@ -408,15 +408,89 @@ interface IKukuSwapPresaleSettings {
 
     function userHoldsSufficientRound1Token(address _user) external view returns (bool);
 
-    function referrerIsValid(address _referrer) external view returns (bool);
-
     function getBaseFee() external view returns (uint256);
 
-    function getKCSCreationFeeAddress() external view returns (address payable);
-
     function getStakingAddress() external view returns (address payable);
+}
 
-    function getKCSCreationFee() external view returns (uint256);
+
+// Dependency file: @openzeppelin/contracts/token/ERC20/IERC20.sol
+
+
+// pragma solidity >=0.6.0 <0.8.0;
+
+/**
+ * @dev Interface of the ERC20 standard as defined in the EIP.
+ */
+interface IERC20 {
+    /**
+     * @dev Returns the amount of tokens in existence.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external view returns (uint256);
+
+    /**
+     * @dev Moves `amount` tokens from the caller's account to `recipient`.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transfer(address recipient, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Returns the remaining number of tokens that `spender` will be
+     * allowed to spend on behalf of `owner` through {transferFrom}. This is
+     * zero by default.
+     *
+     * This value changes when {approve} or {transferFrom} are called.
+     */
+    function allowance(address owner, address spender) external view returns (uint256);
+
+    /**
+     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * IMPORTANT: Beware that changing an allowance with this method brings the risk
+     * that someone may use both the old and the new allowance by unfortunate
+     * transaction ordering. One possible solution to mitigate this race
+     * condition is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     *
+     * Emits an {Approval} event.
+     */
+    function approve(address spender, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Moves `amount` tokens from `sender` to `recipient` using the
+     * allowance mechanism. `amount` is then deducted from the caller's
+     * allowance.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Emitted when `value` tokens are moved from one account (`from`) to
+     * another (`to`).
+     *
+     * Note that `value` may be zero.
+     */
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    /**
+     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+     * a call to {approve}. `value` is the new allowance.
+     */
+    event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
 
@@ -425,27 +499,13 @@ interface IKukuSwapPresaleSettings {
 
 // pragma solidity 0.6.12;
 
-interface IERC20Ext {
+// import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+interface IERC20Ext is IERC20 {
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     function decimals() external view returns (uint8);
-
-    function totalSupply() external view returns (uint256);
-
-    function balanceOf(address owner) external view returns (uint256);
-
-    function allowance(address owner, address spender) external view returns (uint256);
-
-    function approve(address spender, uint256 value) external returns (bool);
-
-    function transfer(address to, uint256 value) external returns (bool);
-
-    function transferFrom(
-        address from,
-        address to,
-        uint256 value
-    ) external returns (bool);
 }
 
 
@@ -471,22 +531,23 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
 
     struct Settings {
         uint256 BASE_FEE; // base fee divided by 1000
-        address payable KCS_CREATION_FEE_ADDRESS;
         address payable STAKING_ADDRESS;
-        uint256 KCS_CREATION_FEE; // fee to generate a presale contract on the platform
         uint256 ROUND1_LENGTH; // length of round 1 in blocks
         uint256 MAX_PRESALE_LENGTH; // maximum difference between start and endblock
     }
 
     Settings public SETTINGS;
 
-    constructor() public {
+    constructor(address _stakingAddress) public {
+        require(_stakingAddress != address(0x0), "PresaleSettings: staking address zero");
         SETTINGS.BASE_FEE = 50; // 5%
-        SETTINGS.KCS_CREATION_FEE = 1e18;
-        SETTINGS.KCS_CREATION_FEE_ADDRESS = msg.sender;
-        SETTINGS.STAKING_ADDRESS = address(0x0);
+        SETTINGS.STAKING_ADDRESS = payable(_stakingAddress);
         SETTINGS.ROUND1_LENGTH = 1200; // 1200 blocks = 2 hours, 1 block 3 seconds
         SETTINGS.MAX_PRESALE_LENGTH = 93046; // 2 weeks
+    }
+
+    function getStakingAddress() external view override returns (address payable) {
+        return SETTINGS.STAKING_ADDRESS;
     }
 
     function getRound1Length() external view override returns (uint256) {
@@ -501,26 +562,12 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
         return SETTINGS.BASE_FEE;
     }
 
-    function getKCSCreationFee() external view override returns (uint256) {
-        return SETTINGS.KCS_CREATION_FEE;
-    }
-
-    function getKCSCreationFeeAddress() external view override returns (address payable) {
-        return SETTINGS.KCS_CREATION_FEE_ADDRESS;
-    }
-
-    function getStakingAddress() external view override returns (address payable) {
-        return SETTINGS.STAKING_ADDRESS;
-    }
-
-    function setFeeAddress(address payable _KCSAddress, address payable _stakingAddress) external onlyOwner {
-        SETTINGS.KCS_CREATION_FEE_ADDRESS = _KCSAddress;
+    function setFeeAddress(address payable _stakingAddress) external onlyOwner {
         SETTINGS.STAKING_ADDRESS = _stakingAddress;
     }
 
-    function setFee(uint256 _baseFee, uint256 _KCSCreationFee) external onlyOwner {
+    function setFee(uint256 _baseFee) external onlyOwner {
         SETTINGS.BASE_FEE = _baseFee;
-        SETTINGS.KCS_CREATION_FEE = _KCSCreationFee;
     }
 
     function setRound1Length(uint256 _round1Length) external onlyOwner {
@@ -529,14 +576,6 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
 
     function setMaxPresaleLength(uint256 _maxLength) external onlyOwner {
         SETTINGS.MAX_PRESALE_LENGTH = _maxLength;
-    }
-
-    function editAllowedReferrers(address payable _referrer, bool _allow) external onlyOwner {
-        if (_allow) {
-            ALLOWED_REFERRERS.add(_referrer);
-        } else {
-            ALLOWED_REFERRERS.remove(_referrer);
-        }
     }
 
     function editEarlyAccessTokens(
@@ -574,18 +613,5 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
 
     function earlyAccessTokensLength() public view returns (uint256) {
         return EARLY_ACCESS_TOKENS.length();
-    }
-
-    // Referrers
-    function allowedReferrersLength() external view returns (uint256) {
-        return ALLOWED_REFERRERS.length();
-    }
-
-    function getReferrerAtIndex(uint256 _index) external view returns (address) {
-        return ALLOWED_REFERRERS.at(_index);
-    }
-
-    function referrerIsValid(address _referrer) external view override returns (bool) {
-        return ALLOWED_REFERRERS.contains(_referrer);
     }
 }
