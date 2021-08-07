@@ -323,7 +323,7 @@ export class KukuSwapPresale extends Contract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, string, string] & {
-        kuku_BASE_FEE: BigNumber;
+        KUKU_BASE_FEE: BigNumber;
         BASE_FEE_ADDRESS: string;
         TOKEN_FEE_ADDRESS: string;
       }
@@ -333,7 +333,7 @@ export class KukuSwapPresale extends Contract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, string, string] & {
-        kuku_BASE_FEE: BigNumber;
+        KUKU_BASE_FEE: BigNumber;
         BASE_FEE_ADDRESS: string;
         TOKEN_FEE_ADDRESS: string;
       }
@@ -680,7 +680,7 @@ export class KukuSwapPresale extends Contract {
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, string, string] & {
-      kuku_BASE_FEE: BigNumber;
+      KUKU_BASE_FEE: BigNumber;
       BASE_FEE_ADDRESS: string;
       TOKEN_FEE_ADDRESS: string;
     }
@@ -690,7 +690,7 @@ export class KukuSwapPresale extends Contract {
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, string, string] & {
-      kuku_BASE_FEE: BigNumber;
+      KUKU_BASE_FEE: BigNumber;
       BASE_FEE_ADDRESS: string;
       TOKEN_FEE_ADDRESS: string;
     }
@@ -1039,7 +1039,7 @@ export class KukuSwapPresale extends Contract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, string, string] & {
-        kuku_BASE_FEE: BigNumber;
+        KUKU_BASE_FEE: BigNumber;
         BASE_FEE_ADDRESS: string;
         TOKEN_FEE_ADDRESS: string;
       }
@@ -1049,7 +1049,7 @@ export class KukuSwapPresale extends Contract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, string, string] & {
-        kuku_BASE_FEE: BigNumber;
+        KUKU_BASE_FEE: BigNumber;
         BASE_FEE_ADDRESS: string;
         TOKEN_FEE_ADDRESS: string;
       }

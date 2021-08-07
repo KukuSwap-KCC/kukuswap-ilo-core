@@ -78,7 +78,7 @@ interface IKukuSwapPresaleSettings {
 
     function getKCSCreationFeeAddress() external view returns (address payable);
 
-    function getKCSAddress() external view returns (address payable);
+    function getStakingAddress() external view returns (address payable);
 
     function getKCSCreationFee() external view returns (uint256);
 }

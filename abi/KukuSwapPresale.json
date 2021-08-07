@@ -79,7 +79,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "kuku_BASE_FEE",
+        "name": "KUKU_BASE_FEE",
         "type": "uint256"
       },
       {

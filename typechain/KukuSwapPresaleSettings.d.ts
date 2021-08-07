@@ -24,23 +24,17 @@ interface KukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
   functions: {
     "EARLY_ACCESS_MAP(address)": FunctionFragment;
     "SETTINGS()": FunctionFragment;
-    "allowedReferrersLength()": FunctionFragment;
     "earlyAccessTokensLength()": FunctionFragment;
-    "editAllowedReferrers(address,bool)": FunctionFragment;
     "editEarlyAccessTokens(address,uint256,bool)": FunctionFragment;
     "getBaseFee()": FunctionFragment;
     "getEarlyAccessTokenAtIndex(uint256)": FunctionFragment;
-    "getKCSAddress()": FunctionFragment;
-    "getKCSCreationFee()": FunctionFragment;
-    "getKCSCreationFeeAddress()": FunctionFragment;
     "getMaxPresaleLength()": FunctionFragment;
-    "getReferrerAtIndex(uint256)": FunctionFragment;
     "getRound1Length()": FunctionFragment;
+    "getStakingAddress()": FunctionFragment;
     "owner()": FunctionFragment;
-    "referrerIsValid(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "setFeeAddresses(address,address)": FunctionFragment;
-    "setFees(uint256,uint256)": FunctionFragment;
+    "setFee(uint256)": FunctionFragment;
+    "setFeeAddress(address)": FunctionFragment;
     "setMaxPresaleLength(uint256)": FunctionFragment;
     "setRound1Length(uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
@@ -53,16 +47,8 @@ interface KukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "SETTINGS", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "allowedReferrersLength",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "earlyAccessTokensLength",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "editAllowedReferrers",
-    values: [string, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "editEarlyAccessTokens",
@@ -77,45 +63,29 @@ interface KukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getKCSAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getKCSCreationFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getKCSCreationFeeAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "getMaxPresaleLength",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getReferrerAtIndex",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getRound1Length",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "referrerIsValid",
-    values: [string]
+    functionFragment: "getStakingAddress",
+    values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setFeeAddresses",
-    values: [string, string]
+    functionFragment: "setFee",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setFees",
-    values: [BigNumberish, BigNumberish]
+    functionFragment: "setFeeAddress",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "setMaxPresaleLength",
@@ -140,15 +110,7 @@ interface KukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "SETTINGS", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "allowedReferrersLength",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "earlyAccessTokensLength",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "editAllowedReferrers",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -161,43 +123,27 @@ interface KukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getKCSAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getKCSCreationFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getKCSCreationFeeAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getMaxPresaleLength",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getReferrerAtIndex",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "getRound1Length",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "referrerIsValid",
+    functionFragment: "getStakingAddress",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setFee", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setFeeAddresses",
+    functionFragment: "setFeeAddress",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setFees", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setMaxPresaleLength",
     data: BytesLike
@@ -249,11 +195,9 @@ export class KukuSwapPresaleSettings extends Contract {
     SETTINGS(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, string, BigNumber, BigNumber] & {
         BASE_FEE: BigNumber;
-        KCS_CREATION_FEE_ADDRESS: string;
         STAKING_ADDRESS: string;
-        KCS_CREATION_FEE: BigNumber;
         ROUND1_LENGTH: BigNumber;
         MAX_PRESALE_LENGTH: BigNumber;
       }
@@ -262,37 +206,19 @@ export class KukuSwapPresaleSettings extends Contract {
     "SETTINGS()"(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, string, BigNumber, BigNumber] & {
         BASE_FEE: BigNumber;
-        KCS_CREATION_FEE_ADDRESS: string;
         STAKING_ADDRESS: string;
-        KCS_CREATION_FEE: BigNumber;
         ROUND1_LENGTH: BigNumber;
         MAX_PRESALE_LENGTH: BigNumber;
       }
     >;
-
-    allowedReferrersLength(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "allowedReferrersLength()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     earlyAccessTokensLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "earlyAccessTokensLength()"(
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
-
-    editAllowedReferrers(
-      _referrer: string,
-      _allow: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "editAllowedReferrers(address,bool)"(
-      _referrer: string,
-      _allow: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
 
     editEarlyAccessTokens(
       _token: string,
@@ -322,75 +248,43 @@ export class KukuSwapPresaleSettings extends Contract {
       overrides?: CallOverrides
     ): Promise<[string, BigNumber]>;
 
-    getKCSAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    "getKCSAddress()"(overrides?: CallOverrides): Promise<[string]>;
-
-    getKCSCreationFee(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "getKCSCreationFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getKCSCreationFeeAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    "getKCSCreationFeeAddress()"(overrides?: CallOverrides): Promise<[string]>;
-
     getMaxPresaleLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "getMaxPresaleLength()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getReferrerAtIndex(
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    "getReferrerAtIndex(uint256)"(
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
 
     getRound1Length(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "getRound1Length()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    getStakingAddress(overrides?: CallOverrides): Promise<[string]>;
+
+    "getStakingAddress()"(overrides?: CallOverrides): Promise<[string]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     "owner()"(overrides?: CallOverrides): Promise<[string]>;
-
-    referrerIsValid(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    "referrerIsValid(address)"(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
 
     renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
 
     "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-    setFeeAddresses(
-      _KCSAddress: string,
+    setFee(
+      _baseFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setFee(uint256)"(
+      _baseFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    setFeeAddress(
       _stakingAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "setFeeAddresses(address,address)"(
-      _KCSAddress: string,
+    "setFeeAddress(address)"(
       _stakingAddress: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    setFees(
-      _baseFee: BigNumberish,
-      _KCSCreationFee: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setFees(uint256,uint256)"(
-      _baseFee: BigNumberish,
-      _KCSCreationFee: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -445,11 +339,9 @@ export class KukuSwapPresaleSettings extends Contract {
   SETTINGS(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, string, BigNumber, BigNumber, BigNumber] & {
+    [BigNumber, string, BigNumber, BigNumber] & {
       BASE_FEE: BigNumber;
-      KCS_CREATION_FEE_ADDRESS: string;
       STAKING_ADDRESS: string;
-      KCS_CREATION_FEE: BigNumber;
       ROUND1_LENGTH: BigNumber;
       MAX_PRESALE_LENGTH: BigNumber;
     }
@@ -458,35 +350,17 @@ export class KukuSwapPresaleSettings extends Contract {
   "SETTINGS()"(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, string, BigNumber, BigNumber, BigNumber] & {
+    [BigNumber, string, BigNumber, BigNumber] & {
       BASE_FEE: BigNumber;
-      KCS_CREATION_FEE_ADDRESS: string;
       STAKING_ADDRESS: string;
-      KCS_CREATION_FEE: BigNumber;
       ROUND1_LENGTH: BigNumber;
       MAX_PRESALE_LENGTH: BigNumber;
     }
   >;
 
-  allowedReferrersLength(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "allowedReferrersLength()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   earlyAccessTokensLength(overrides?: CallOverrides): Promise<BigNumber>;
 
   "earlyAccessTokensLength()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  editAllowedReferrers(
-    _referrer: string,
-    _allow: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "editAllowedReferrers(address,bool)"(
-    _referrer: string,
-    _allow: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
 
   editEarlyAccessTokens(
     _token: string,
@@ -516,75 +390,43 @@ export class KukuSwapPresaleSettings extends Contract {
     overrides?: CallOverrides
   ): Promise<[string, BigNumber]>;
 
-  getKCSAddress(overrides?: CallOverrides): Promise<string>;
-
-  "getKCSAddress()"(overrides?: CallOverrides): Promise<string>;
-
-  getKCSCreationFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getKCSCreationFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getKCSCreationFeeAddress(overrides?: CallOverrides): Promise<string>;
-
-  "getKCSCreationFeeAddress()"(overrides?: CallOverrides): Promise<string>;
-
   getMaxPresaleLength(overrides?: CallOverrides): Promise<BigNumber>;
 
   "getMaxPresaleLength()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getReferrerAtIndex(
-    _index: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "getReferrerAtIndex(uint256)"(
-    _index: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
 
   getRound1Length(overrides?: CallOverrides): Promise<BigNumber>;
 
   "getRound1Length()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+  getStakingAddress(overrides?: CallOverrides): Promise<string>;
+
+  "getStakingAddress()"(overrides?: CallOverrides): Promise<string>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   "owner()"(overrides?: CallOverrides): Promise<string>;
-
-  referrerIsValid(
-    _referrer: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  "referrerIsValid(address)"(
-    _referrer: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
 
   renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
 
   "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
 
-  setFeeAddresses(
-    _KCSAddress: string,
+  setFee(
+    _baseFee: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setFee(uint256)"(
+    _baseFee: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  setFeeAddress(
     _stakingAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "setFeeAddresses(address,address)"(
-    _KCSAddress: string,
+  "setFeeAddress(address)"(
     _stakingAddress: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  setFees(
-    _baseFee: BigNumberish,
-    _KCSCreationFee: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setFees(uint256,uint256)"(
-    _baseFee: BigNumberish,
-    _KCSCreationFee: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -642,11 +484,9 @@ export class KukuSwapPresaleSettings extends Contract {
     SETTINGS(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, string, BigNumber, BigNumber] & {
         BASE_FEE: BigNumber;
-        KCS_CREATION_FEE_ADDRESS: string;
         STAKING_ADDRESS: string;
-        KCS_CREATION_FEE: BigNumber;
         ROUND1_LENGTH: BigNumber;
         MAX_PRESALE_LENGTH: BigNumber;
       }
@@ -655,35 +495,17 @@ export class KukuSwapPresaleSettings extends Contract {
     "SETTINGS()"(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, string, BigNumber, BigNumber] & {
         BASE_FEE: BigNumber;
-        KCS_CREATION_FEE_ADDRESS: string;
         STAKING_ADDRESS: string;
-        KCS_CREATION_FEE: BigNumber;
         ROUND1_LENGTH: BigNumber;
         MAX_PRESALE_LENGTH: BigNumber;
       }
     >;
 
-    allowedReferrersLength(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "allowedReferrersLength()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     earlyAccessTokensLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     "earlyAccessTokensLength()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    editAllowedReferrers(
-      _referrer: string,
-      _allow: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "editAllowedReferrers(address,bool)"(
-      _referrer: string,
-      _allow: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     editEarlyAccessTokens(
       _token: string,
@@ -713,75 +535,40 @@ export class KukuSwapPresaleSettings extends Contract {
       overrides?: CallOverrides
     ): Promise<[string, BigNumber]>;
 
-    getKCSAddress(overrides?: CallOverrides): Promise<string>;
-
-    "getKCSAddress()"(overrides?: CallOverrides): Promise<string>;
-
-    getKCSCreationFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getKCSCreationFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getKCSCreationFeeAddress(overrides?: CallOverrides): Promise<string>;
-
-    "getKCSCreationFeeAddress()"(overrides?: CallOverrides): Promise<string>;
-
     getMaxPresaleLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getMaxPresaleLength()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getReferrerAtIndex(
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "getReferrerAtIndex(uint256)"(
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     getRound1Length(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getRound1Length()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getStakingAddress(overrides?: CallOverrides): Promise<string>;
+
+    "getStakingAddress()"(overrides?: CallOverrides): Promise<string>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     "owner()"(overrides?: CallOverrides): Promise<string>;
-
-    referrerIsValid(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "referrerIsValid(address)"(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     "renounceOwnership()"(overrides?: CallOverrides): Promise<void>;
 
-    setFeeAddresses(
-      _KCSAddress: string,
+    setFee(_baseFee: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "setFee(uint256)"(
+      _baseFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setFeeAddress(
       _stakingAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setFeeAddresses(address,address)"(
-      _KCSAddress: string,
+    "setFeeAddress(address)"(
       _stakingAddress: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setFees(
-      _baseFee: BigNumberish,
-      _KCSCreationFee: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setFees(uint256,uint256)"(
-      _baseFee: BigNumberish,
-      _KCSCreationFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -848,25 +635,9 @@ export class KukuSwapPresaleSettings extends Contract {
 
     "SETTINGS()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    allowedReferrersLength(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "allowedReferrersLength()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     earlyAccessTokensLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     "earlyAccessTokensLength()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    editAllowedReferrers(
-      _referrer: string,
-      _allow: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "editAllowedReferrers(address,bool)"(
-      _referrer: string,
-      _allow: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
 
     editEarlyAccessTokens(
       _token: string,
@@ -896,75 +667,40 @@ export class KukuSwapPresaleSettings extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getKCSAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getKCSAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getKCSCreationFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getKCSCreationFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getKCSCreationFeeAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getKCSCreationFeeAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getMaxPresaleLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getMaxPresaleLength()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getReferrerAtIndex(
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getReferrerAtIndex(uint256)"(
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     getRound1Length(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getRound1Length()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getStakingAddress(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getStakingAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    referrerIsValid(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "referrerIsValid(address)"(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     renounceOwnership(overrides?: Overrides): Promise<BigNumber>;
 
     "renounceOwnership()"(overrides?: Overrides): Promise<BigNumber>;
 
-    setFeeAddresses(
-      _KCSAddress: string,
+    setFee(_baseFee: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
+
+    "setFee(uint256)"(
+      _baseFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    setFeeAddress(
       _stakingAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "setFeeAddresses(address,address)"(
-      _KCSAddress: string,
+    "setFeeAddress(address)"(
       _stakingAddress: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setFees(
-      _baseFee: BigNumberish,
-      _KCSCreationFee: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setFees(uint256,uint256)"(
-      _baseFee: BigNumberish,
-      _KCSCreationFee: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -1024,32 +760,12 @@ export class KukuSwapPresaleSettings extends Contract {
 
     "SETTINGS()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    allowedReferrersLength(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "allowedReferrersLength()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     earlyAccessTokensLength(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "earlyAccessTokensLength()"(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    editAllowedReferrers(
-      _referrer: string,
-      _allow: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "editAllowedReferrers(address,bool)"(
-      _referrer: string,
-      _allow: boolean,
-      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     editEarlyAccessTokens(
@@ -1080,39 +796,11 @@ export class KukuSwapPresaleSettings extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getKCSAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getKCSAddress()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getKCSCreationFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getKCSCreationFee()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getKCSCreationFeeAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getKCSCreationFeeAddress()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getMaxPresaleLength(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "getMaxPresaleLength()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getReferrerAtIndex(
-      _index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getReferrerAtIndex(uint256)"(
-      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1122,45 +810,37 @@ export class KukuSwapPresaleSettings extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getStakingAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getStakingAddress()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    referrerIsValid(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "referrerIsValid(address)"(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     "renounceOwnership()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    setFeeAddresses(
-      _KCSAddress: string,
+    setFee(
+      _baseFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setFee(uint256)"(
+      _baseFee: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    setFeeAddress(
       _stakingAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setFeeAddresses(address,address)"(
-      _KCSAddress: string,
+    "setFeeAddress(address)"(
       _stakingAddress: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    setFees(
-      _baseFee: BigNumberish,
-      _KCSCreationFee: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setFees(uint256,uint256)"(
-      _baseFee: BigNumberish,
-      _KCSCreationFee: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

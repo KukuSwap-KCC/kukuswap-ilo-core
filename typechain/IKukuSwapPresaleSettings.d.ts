@@ -22,12 +22,9 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface IKukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
   functions: {
     "getBaseFee()": FunctionFragment;
-    "getKCSAddress()": FunctionFragment;
-    "getKCSCreationFee()": FunctionFragment;
-    "getKCSCreationFeeAddress()": FunctionFragment;
     "getMaxPresaleLength()": FunctionFragment;
     "getRound1Length()": FunctionFragment;
-    "referrerIsValid(address)": FunctionFragment;
+    "getStakingAddress()": FunctionFragment;
     "userHoldsSufficientRound1Token(address)": FunctionFragment;
   };
 
@@ -36,18 +33,6 @@ interface IKukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getKCSAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getKCSCreationFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getKCSCreationFeeAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "getMaxPresaleLength",
     values?: undefined
   ): string;
@@ -56,8 +41,8 @@ interface IKukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "referrerIsValid",
-    values: [string]
+    functionFragment: "getStakingAddress",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "userHoldsSufficientRound1Token",
@@ -66,18 +51,6 @@ interface IKukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(functionFragment: "getBaseFee", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getKCSAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getKCSCreationFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getKCSCreationFeeAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getMaxPresaleLength",
     data: BytesLike
   ): Result;
@@ -86,7 +59,7 @@ interface IKukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "referrerIsValid",
+    functionFragment: "getStakingAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -115,18 +88,6 @@ export class IKukuSwapPresaleSettings extends Contract {
 
     "getBaseFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getKCSAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    "getKCSAddress()"(overrides?: CallOverrides): Promise<[string]>;
-
-    getKCSCreationFee(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "getKCSCreationFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getKCSCreationFeeAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    "getKCSCreationFeeAddress()"(overrides?: CallOverrides): Promise<[string]>;
-
     getMaxPresaleLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "getMaxPresaleLength()"(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -135,15 +96,9 @@ export class IKukuSwapPresaleSettings extends Contract {
 
     "getRound1Length()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    referrerIsValid(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    getStakingAddress(overrides?: CallOverrides): Promise<[string]>;
 
-    "referrerIsValid(address)"(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    "getStakingAddress()"(overrides?: CallOverrides): Promise<[string]>;
 
     userHoldsSufficientRound1Token(
       _user: string,
@@ -160,18 +115,6 @@ export class IKukuSwapPresaleSettings extends Contract {
 
   "getBaseFee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getKCSAddress(overrides?: CallOverrides): Promise<string>;
-
-  "getKCSAddress()"(overrides?: CallOverrides): Promise<string>;
-
-  getKCSCreationFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "getKCSCreationFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getKCSCreationFeeAddress(overrides?: CallOverrides): Promise<string>;
-
-  "getKCSCreationFeeAddress()"(overrides?: CallOverrides): Promise<string>;
-
   getMaxPresaleLength(overrides?: CallOverrides): Promise<BigNumber>;
 
   "getMaxPresaleLength()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -180,15 +123,9 @@ export class IKukuSwapPresaleSettings extends Contract {
 
   "getRound1Length()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-  referrerIsValid(
-    _referrer: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  getStakingAddress(overrides?: CallOverrides): Promise<string>;
 
-  "referrerIsValid(address)"(
-    _referrer: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  "getStakingAddress()"(overrides?: CallOverrides): Promise<string>;
 
   userHoldsSufficientRound1Token(
     _user: string,
@@ -205,18 +142,6 @@ export class IKukuSwapPresaleSettings extends Contract {
 
     "getBaseFee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getKCSAddress(overrides?: CallOverrides): Promise<string>;
-
-    "getKCSAddress()"(overrides?: CallOverrides): Promise<string>;
-
-    getKCSCreationFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getKCSCreationFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getKCSCreationFeeAddress(overrides?: CallOverrides): Promise<string>;
-
-    "getKCSCreationFeeAddress()"(overrides?: CallOverrides): Promise<string>;
-
     getMaxPresaleLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getMaxPresaleLength()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -225,15 +150,9 @@ export class IKukuSwapPresaleSettings extends Contract {
 
     "getRound1Length()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    referrerIsValid(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    getStakingAddress(overrides?: CallOverrides): Promise<string>;
 
-    "referrerIsValid(address)"(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+    "getStakingAddress()"(overrides?: CallOverrides): Promise<string>;
 
     userHoldsSufficientRound1Token(
       _user: string,
@@ -253,18 +172,6 @@ export class IKukuSwapPresaleSettings extends Contract {
 
     "getBaseFee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getKCSAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getKCSAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getKCSCreationFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getKCSCreationFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getKCSCreationFeeAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getKCSCreationFeeAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     getMaxPresaleLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getMaxPresaleLength()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -273,15 +180,9 @@ export class IKukuSwapPresaleSettings extends Contract {
 
     "getRound1Length()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    referrerIsValid(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getStakingAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "referrerIsValid(address)"(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    "getStakingAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     userHoldsSufficientRound1Token(
       _user: string,
@@ -299,24 +200,6 @@ export class IKukuSwapPresaleSettings extends Contract {
 
     "getBaseFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getKCSAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getKCSAddress()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getKCSCreationFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "getKCSCreationFee()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getKCSCreationFeeAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getKCSCreationFeeAddress()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getMaxPresaleLength(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -331,13 +214,9 @@ export class IKukuSwapPresaleSettings extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    referrerIsValid(
-      _referrer: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getStakingAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "referrerIsValid(address)"(
-      _referrer: string,
+    "getStakingAddress()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

@@ -414,7 +414,7 @@ interface IKukuSwapPresaleSettings {
 
     function getKCSCreationFeeAddress() external view returns (address payable);
 
-    function getKCSAddress() external view returns (address payable);
+    function getStakingAddress() external view returns (address payable);
 
     function getKCSCreationFee() external view returns (uint256);
 }
@@ -509,16 +509,16 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
         return SETTINGS.KCS_CREATION_FEE_ADDRESS;
     }
 
-    function getKCSAddress() external view override returns (address payable) {
+    function getStakingAddress() external view override returns (address payable) {
         return SETTINGS.STAKING_ADDRESS;
     }
 
-    function setFeeAddresses(address payable _KCSAddress, address payable _stakingAddress) external onlyOwner {
+    function setFeeAddress(address payable _KCSAddress, address payable _stakingAddress) external onlyOwner {
         SETTINGS.KCS_CREATION_FEE_ADDRESS = _KCSAddress;
         SETTINGS.STAKING_ADDRESS = _stakingAddress;
     }
 
-    function setFees(uint256 _baseFee, uint256 _KCSCreationFee) external onlyOwner {
+    function setFee(uint256 _baseFee, uint256 _KCSCreationFee) external onlyOwner {
         SETTINGS.BASE_FEE = _baseFee;
         SETTINGS.KCS_CREATION_FEE = _KCSCreationFee;
     }

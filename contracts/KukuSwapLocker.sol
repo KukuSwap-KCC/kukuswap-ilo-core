@@ -71,7 +71,7 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         gFees.secondaryFeeToken = IERCBurn(_secondaryFeeToken);
     }
 
-    function setFees(
+    function setFee(
         uint256 _kcsFee,
         uint256 _secondaryTokenFee,
         uint256 _secondaryTokenDiscount,

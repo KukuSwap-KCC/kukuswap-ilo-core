@@ -62,10 +62,6 @@ contract KukuSwapPresaleGenerator is Ownable {
             params.lockPeriod = 4 weeks;
         }
 
-        // Charge KCS fee for contract creation
-        require(msg.value == PRESALE_SETTINGS.getKCSCreationFee(), "FEE NOT MET");
-        PRESALE_SETTINGS.getKCSCreationFeeAddress().transfer(PRESALE_SETTINGS.getKCSCreationFee());
-
         require(params.amount >= 10000, "MIN DIVIS"); // minimum divisibility
         require(params.endblock.sub(params.startblock) <= PRESALE_SETTINGS.getMaxPresaleLength());
         require(params.tokenPrice.mul(params.hardcap) > 0, "INVALID PARAMS"); // ensure no overflow for future calculations
@@ -93,7 +89,7 @@ contract KukuSwapPresaleGenerator is Ownable {
             params.endblock,
             params.lockPeriod
         );
-        newPresale.init2(_baseToken, _presaleToken, PRESALE_SETTINGS.getBaseFee(), PRESALE_SETTINGS.getKCSAddress());
+        newPresale.init2(_baseToken, _presaleToken, PRESALE_SETTINGS.getBaseFee(), PRESALE_SETTINGS.getStakingAddress());
         PRESALE_FACTORY.registerPresale(address(newPresale));
     }
 }

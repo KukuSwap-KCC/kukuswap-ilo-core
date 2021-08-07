@@ -39,7 +39,7 @@ contract KukuSwapPresale is ReentrancyGuard {
     }
 
     struct PresaleFeeInfo {
-        uint256 kuku_BASE_FEE; // divided by 1000
+        uint256 KUKU_BASE_FEE; // divided by 1000
         address payable BASE_FEE_ADDRESS;
         address payable TOKEN_FEE_ADDRESS;
     }
@@ -121,7 +121,7 @@ contract KukuSwapPresale is ReentrancyGuard {
         PRESALE_INFO.PRESALE_IN_KCS = address(_baseToken) == address(WKCS);
         PRESALE_INFO.S_TOKEN = _presaleToken;
         PRESALE_INFO.B_TOKEN = _baseToken;
-        PRESALE_FEE_INFO.kuku_BASE_FEE = _kukuBaseFee;
+        PRESALE_FEE_INFO.KUKU_BASE_FEE = _kukuBaseFee;
 
         PRESALE_FEE_INFO.BASE_FEE_ADDRESS = _baseFeeAddress;
 
@@ -260,7 +260,7 @@ contract KukuSwapPresale is ReentrancyGuard {
             return;
         }
 
-        uint256 kukuBaseFee = STATUS.TOTAL_BASE_COLLECTED.mul(PRESALE_FEE_INFO.kuku_BASE_FEE).div(1000);
+        uint256 kukuBaseFee = STATUS.TOTAL_BASE_COLLECTED.mul(PRESALE_FEE_INFO.KUKU_BASE_FEE).div(1000);
 
         // base token liquidity
         uint256 baseLiquidity = STATUS.TOTAL_BASE_COLLECTED.sub(kukuBaseFee).mul(PRESALE_INFO.LIQUIDITY_PERCENT).div(1000);

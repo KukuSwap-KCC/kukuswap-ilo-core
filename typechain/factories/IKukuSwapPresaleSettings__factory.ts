@@ -36,45 +36,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "getKCSAddress",
-    outputs: [
-      {
-        internalType: "address payable",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getKCSCreationFee",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getKCSCreationFeeAddress",
-    outputs: [
-      {
-        internalType: "address payable",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "getMaxPresaleLength",
     outputs: [
       {
@@ -100,19 +61,13 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_referrer",
-        type: "address",
-      },
-    ],
-    name: "referrerIsValid",
+    inputs: [],
+    name: "getStakingAddress",
     outputs: [
       {
-        internalType: "bool",
+        internalType: "address payable",
         name: "",
-        type: "bool",
+        type: "address",
       },
     ],
     stateMutability: "view",

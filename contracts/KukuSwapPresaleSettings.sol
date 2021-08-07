@@ -19,24 +19,25 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
 
     struct Settings {
         uint256 BASE_FEE; // base fee divided by 1000
-        address payable KCS_CREATION_FEE_ADDRESS;
         address payable STAKING_ADDRESS;
-        uint256 KCS_CREATION_FEE; // fee to generate a presale contract on the platform
         uint256 ROUND1_LENGTH; // length of round 1 in blocks
         uint256 MAX_PRESALE_LENGTH; // maximum difference between start and endblock
     }
 
     Settings public SETTINGS;
 
-    constructor() public {
+    constructor(address _stakingAddress) public {
+        require(_stakingAddress != address(0x0), "PresaleSettings: staking address zero");
         SETTINGS.BASE_FEE = 50; // 5%
-        SETTINGS.KCS_CREATION_FEE = 1e18;
-        SETTINGS.KCS_CREATION_FEE_ADDRESS = msg.sender;
-        SETTINGS.STAKING_ADDRESS = address(0x0);
+        SETTINGS.STAKING_ADDRESS = payable(_stakingAddress);
         SETTINGS.ROUND1_LENGTH = 1200; // 1200 blocks = 2 hours, 1 block 3 seconds
         SETTINGS.MAX_PRESALE_LENGTH = 93046; // 2 weeks
     }
 
+
+    function getStakingAddress() external view override returns(address payable) {
+        return SETTINGS.STAKING_ADDRESS;
+    }
     function getRound1Length() external view override returns (uint256) {
         return SETTINGS.ROUND1_LENGTH;
     }
@@ -49,26 +50,12 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
         return SETTINGS.BASE_FEE;
     }
 
-    function getKCSCreationFee() external view override returns (uint256) {
-        return SETTINGS.KCS_CREATION_FEE;
-    }
-
-    function getKCSCreationFeeAddress() external view override returns (address payable) {
-        return SETTINGS.KCS_CREATION_FEE_ADDRESS;
-    }
-
-    function getKCSAddress() external view override returns (address payable) {
-        return SETTINGS.STAKING_ADDRESS;
-    }
-
-    function setFeeAddresses(address payable _KCSAddress, address payable _stakingAddress) external onlyOwner {
-        SETTINGS.KCS_CREATION_FEE_ADDRESS = _KCSAddress;
+    function setFeeAddress(address payable _stakingAddress) external onlyOwner {
         SETTINGS.STAKING_ADDRESS = _stakingAddress;
     }
 
-    function setFees(uint256 _baseFee, uint256 _KCSCreationFee) external onlyOwner {
+    function setFee(uint256 _baseFee) external onlyOwner {
         SETTINGS.BASE_FEE = _baseFee;
-        SETTINGS.KCS_CREATION_FEE = _KCSCreationFee;
     }
 
     function setRound1Length(uint256 _round1Length) external onlyOwner {
@@ -77,14 +64,6 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
 
     function setMaxPresaleLength(uint256 _maxLength) external onlyOwner {
         SETTINGS.MAX_PRESALE_LENGTH = _maxLength;
-    }
-
-    function editAllowedReferrers(address payable _referrer, bool _allow) external onlyOwner {
-        if (_allow) {
-            ALLOWED_REFERRERS.add(_referrer);
-        } else {
-            ALLOWED_REFERRERS.remove(_referrer);
-        }
     }
 
     function editEarlyAccessTokens(
@@ -122,18 +101,5 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
 
     function earlyAccessTokensLength() public view returns (uint256) {
         return EARLY_ACCESS_TOKENS.length();
-    }
-
-    // Referrers
-    function allowedReferrersLength() external view returns (uint256) {
-        return ALLOWED_REFERRERS.length();
-    }
-
-    function getReferrerAtIndex(uint256 _index) external view returns (address) {
-        return ALLOWED_REFERRERS.at(_index);
-    }
-
-    function referrerIsValid(address _referrer) external view override returns (bool) {
-        return ALLOWED_REFERRERS.contains(_referrer);
     }
 }

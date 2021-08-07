@@ -504,7 +504,7 @@ interface IKukuSwapPresaleSettings {
 
     function getKCSCreationFeeAddress() external view returns (address payable);
 
-    function getKCSAddress() external view returns (address payable);
+    function getStakingAddress() external view returns (address payable);
 
     function getKCSCreationFee() external view returns (uint256);
 }
@@ -1341,7 +1341,7 @@ contract KukuSwapPresaleGenerator is Ownable {
             params.endblock,
             params.lockPeriod
         );
-        newPresale.init2(_baseToken, _presaleToken, PRESALE_SETTINGS.getBaseFee(), PRESALE_SETTINGS.getKCSAddress());
+        newPresale.init2(_baseToken, _presaleToken, PRESALE_SETTINGS.getBaseFee(), PRESALE_SETTINGS.getStakingAddress());
         PRESALE_FACTORY.registerPresale(address(newPresale));
     }
 }

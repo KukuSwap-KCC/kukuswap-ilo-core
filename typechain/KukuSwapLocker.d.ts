@@ -41,7 +41,7 @@ interface KukuSwapLockerInterface extends ethers.utils.Interface {
     "relock(address,uint256,uint256,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setDev(address)": FunctionFragment;
-    "setFees(uint256,uint256,uint256,uint256)": FunctionFragment;
+    "setFee(uint256,uint256,uint256,uint256)": FunctionFragment;
     "setSecondaryFeeToken(address)": FunctionFragment;
     "splitLock(address,uint256,uint256,uint256)": FunctionFragment;
     "tokenLocks(address,uint256)": FunctionFragment;
@@ -115,7 +115,7 @@ interface KukuSwapLockerInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "setDev", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "setFees",
+    functionFragment: "setFee",
     values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -207,7 +207,7 @@ interface KukuSwapLockerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setDev", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setFees", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setSecondaryFeeToken",
     data: BytesLike
@@ -447,7 +447,7 @@ export class KukuSwapLocker extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setFees(
+    setFee(
       _kcsFee: BigNumberish,
       _secondaryTokenFee: BigNumberish,
       _secondaryTokenDiscount: BigNumberish,
@@ -455,7 +455,7 @@ export class KukuSwapLocker extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "setFees(uint256,uint256,uint256,uint256)"(
+    "setFee(uint256,uint256,uint256,uint256)"(
       _kcsFee: BigNumberish,
       _secondaryTokenFee: BigNumberish,
       _secondaryTokenDiscount: BigNumberish,
@@ -763,7 +763,7 @@ export class KukuSwapLocker extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setFees(
+  setFee(
     _kcsFee: BigNumberish,
     _secondaryTokenFee: BigNumberish,
     _secondaryTokenDiscount: BigNumberish,
@@ -771,7 +771,7 @@ export class KukuSwapLocker extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "setFees(uint256,uint256,uint256,uint256)"(
+  "setFee(uint256,uint256,uint256,uint256)"(
     _kcsFee: BigNumberish,
     _secondaryTokenFee: BigNumberish,
     _secondaryTokenDiscount: BigNumberish,
@@ -1081,7 +1081,7 @@ export class KukuSwapLocker extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setFees(
+    setFee(
       _kcsFee: BigNumberish,
       _secondaryTokenFee: BigNumberish,
       _secondaryTokenDiscount: BigNumberish,
@@ -1089,7 +1089,7 @@ export class KukuSwapLocker extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setFees(uint256,uint256,uint256,uint256)"(
+    "setFee(uint256,uint256,uint256,uint256)"(
       _kcsFee: BigNumberish,
       _secondaryTokenFee: BigNumberish,
       _secondaryTokenDiscount: BigNumberish,
@@ -1397,7 +1397,7 @@ export class KukuSwapLocker extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setFees(
+    setFee(
       _kcsFee: BigNumberish,
       _secondaryTokenFee: BigNumberish,
       _secondaryTokenDiscount: BigNumberish,
@@ -1405,7 +1405,7 @@ export class KukuSwapLocker extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "setFees(uint256,uint256,uint256,uint256)"(
+    "setFee(uint256,uint256,uint256,uint256)"(
       _kcsFee: BigNumberish,
       _secondaryTokenFee: BigNumberish,
       _secondaryTokenDiscount: BigNumberish,
@@ -1689,7 +1689,7 @@ export class KukuSwapLocker extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setFees(
+    setFee(
       _kcsFee: BigNumberish,
       _secondaryTokenFee: BigNumberish,
       _secondaryTokenDiscount: BigNumberish,
@@ -1697,7 +1697,7 @@ export class KukuSwapLocker extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setFees(uint256,uint256,uint256,uint256)"(
+    "setFee(uint256,uint256,uint256,uint256)"(
       _kcsFee: BigNumberish,
       _secondaryTokenFee: BigNumberish,
       _secondaryTokenDiscount: BigNumberish,

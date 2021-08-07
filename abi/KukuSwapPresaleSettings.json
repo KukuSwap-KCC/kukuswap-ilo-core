@@ -1,6 +1,12 @@
 [
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_stakingAddress",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -53,18 +59,8 @@
       },
       {
         "internalType": "address payable",
-        "name": "KCS_CREATION_FEE_ADDRESS",
-        "type": "address"
-      },
-      {
-        "internalType": "address payable",
         "name": "STAKING_ADDRESS",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "KCS_CREATION_FEE",
-        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -82,19 +78,6 @@
   },
   {
     "inputs": [],
-    "name": "allowedReferrersLength",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "earlyAccessTokensLength",
     "outputs": [
       {
@@ -104,24 +87,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address payable",
-        "name": "_referrer",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "_allow",
-        "type": "bool"
-      }
-    ],
-    "name": "editAllowedReferrers",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -186,70 +151,12 @@
   },
   {
     "inputs": [],
-    "name": "getKCSAddress",
-    "outputs": [
-      {
-        "internalType": "address payable",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getKCSCreationFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getKCSCreationFeeAddress",
-    "outputs": [
-      {
-        "internalType": "address payable",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "getMaxPresaleLength",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_index",
-        "type": "uint256"
-      }
-    ],
-    "name": "getReferrerAtIndex",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -270,10 +177,10 @@
   },
   {
     "inputs": [],
-    "name": "owner",
+    "name": "getStakingAddress",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "address payable",
         "name": "",
         "type": "address"
       }
@@ -282,19 +189,13 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_referrer",
-        "type": "address"
-      }
-    ],
-    "name": "referrerIsValid",
+    "inputs": [],
+    "name": "owner",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "address",
         "name": "",
-        "type": "bool"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -310,17 +211,12 @@
   {
     "inputs": [
       {
-        "internalType": "address payable",
-        "name": "_KCSAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address payable",
-        "name": "_stakingAddress",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "_baseFee",
+        "type": "uint256"
       }
     ],
-    "name": "setFeeAddresses",
+    "name": "setFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -328,17 +224,12 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_baseFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_KCSCreationFee",
-        "type": "uint256"
+        "internalType": "address payable",
+        "name": "_stakingAddress",
+        "type": "address"
       }
     ],
-    "name": "setFees",
+    "name": "setFeeAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
