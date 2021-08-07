@@ -63,10 +63,7 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         devaddr = _devaddr;
     }
 
-    function setFee(
-        uint256 _kcsFee,
-        uint256 _liquidityFee
-    ) public onlyOwner {
+    function setFee(uint256 _kcsFee, uint256 _liquidityFee) public onlyOwner {
         gFees.kcsFee = _kcsFee;
         gFees.liquidityFee = _liquidityFee;
     }
@@ -97,7 +94,6 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         bool _fee_in_kcs,
         address payable _withdrawer
     ) external payable nonReentrant {
-
         require(_unlock_block >= block.number, "INVALID UNLOCK BLOCK"); // prevents errors when timestamp entered in milliseconds
 
         require(_amount > 0, "INSUFFICIENT");
@@ -112,7 +108,6 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         // flatrate fees
         if (!feeWhitelist.contains(msg.sender)) {
             if (_fee_in_kcs) {
-
                 // charge fee in kcs
                 uint256 kcsFee = gFees.kcsFee;
 
@@ -131,12 +126,12 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         uint256 liquidityFee = 0;
 
         if (!feeWhitelist.contains(msg.sender)) {
-                // percent fee
+            // percent fee
             liquidityFee = _amount.mul(gFees.liquidityFee).div(1000);
 
             TransferHelper.safeTransfer(_lpToken, devaddr, liquidityFee);
         }
-        
+
         uint256 amountLocked = _amount.sub(liquidityFee);
 
         TokenLock memory token_lock;
@@ -188,7 +183,6 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
 
         userLock.amount = amountLocked;
         userLock.unlockBlock = _unlock_block;
-
     }
 
     /**
@@ -242,7 +236,7 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         uint256 liquidityFee = 0;
 
         if (!feeWhitelist.contains(msg.sender)) {
-             // send kuku fee to dev address
+            // send kuku fee to dev address
             liquidityFee = _amount.mul(gFees.liquidityFee).div(1000);
             TransferHelper.safeTransfer(_lpToken, devaddr, liquidityFee);
         }

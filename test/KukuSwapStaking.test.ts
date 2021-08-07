@@ -3,7 +3,6 @@ import { expect } from "chai";
 
 describe("KukuSwapStaking", function () {
     before(async function () {
-
         await network.provider.request({
             method: "hardhat_reset",
             params: [],

@@ -4,7 +4,6 @@ import { Address } from "cluster";
 
 describe("KukuSwapPresaleSettings", function () {
     before(async function () {
-
         await network.provider.request({
             method: "hardhat_reset",
             params: [],
