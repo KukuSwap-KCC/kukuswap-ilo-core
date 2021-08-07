@@ -420,12 +420,12 @@ interface IKukuSwapPresaleSettings {
 }
 
 
-// Dependency file: contracts/interfaces/IERC20.sol
+// Dependency file: contracts/interfaces/IERC20Ext.sol
 
 
 // pragma solidity 0.6.12;
 
-interface IERC20 {
+interface IERC20Ext {
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
@@ -459,7 +459,7 @@ pragma solidity 0.6.12;
 // import "@openzeppelin/contracts/access/Ownable.sol";
 // import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 // import "contracts/interfaces/IKukuSwapPresaleSettings.sol";
-// import "contracts/interfaces/IERC20.sol";
+// import "contracts/interfaces/IERC20Ext.sol";
 
 contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -560,7 +560,7 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
         }
         for (uint256 i = 0; i < earlyAccessTokensLength(); i++) {
             (address token, uint256 amountHold) = getEarlyAccessTokenAtIndex(i);
-            if (IERC20(token).balanceOf(_user) >= amountHold) {
+            if (IERC20Ext(token).balanceOf(_user) >= amountHold) {
                 return true;
             }
         }

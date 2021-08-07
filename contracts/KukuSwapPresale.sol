@@ -5,7 +5,7 @@ import "./interfaces/IKukuSwapPresaleLockForwarder.sol";
 import "./interfaces/IKukuSwapFactory.sol";
 import "./interfaces/IKukuSwapPresaleSettings.sol";
 import "./interfaces/IWKCS.sol";
-import "./interfaces/IERC20.sol";
+import "./interfaces/IERC20Ext.sol";
 import "./helpers/TransferHelper.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
@@ -23,8 +23,8 @@ contract KukuSwapPresale is ReentrancyGuard {
 
     struct PresaleInfo {
         address payable PRESALE_OWNER;
-        IERC20 S_TOKEN; // sale token
-        IERC20 B_TOKEN; // base token // usually WKCS (KCS)
+        IERC20Ext S_TOKEN; // sale token
+        IERC20Ext B_TOKEN; // base token // usually WKCS (KCS)
         uint256 TOKEN_PRICE; // 1 base token = ? s_tokens, fixed price
         uint256 MAX_SPEND_PER_BUYER; // maximum base token BUY amount per account
         uint256 AMOUNT; // the amount of presale tokens up for presale
@@ -110,8 +110,8 @@ contract KukuSwapPresale is ReentrancyGuard {
     }
 
     function init2(
-        IERC20 _baseToken,
-        IERC20 _presaleToken,
+        IERC20Ext _baseToken,
+        IERC20Ext _presaleToken,
         uint256 _kukuBaseFee,
         address payable _baseFeeAddress
     ) external {

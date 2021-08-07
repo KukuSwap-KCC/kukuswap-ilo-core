@@ -59,7 +59,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "unlockDate",
+        "name": "unlockBlock",
         "type": "uint256"
       }
     ],
@@ -92,21 +92,6 @@
       {
         "internalType": "uint256",
         "name": "kcsFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "contract IERCBurn",
-        "name": "secondaryFeeToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "secondaryTokenFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "secondaryTokenDiscount",
         "type": "uint256"
       },
       {
@@ -396,7 +381,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_unlock_date",
+        "name": "_unlock_block",
         "type": "uint256"
       },
       {
@@ -447,7 +432,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_unlock_date",
+        "name": "_unlock_block",
         "type": "uint256"
       }
     ],
@@ -485,34 +470,11 @@
       },
       {
         "internalType": "uint256",
-        "name": "_secondaryTokenFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_secondaryTokenDiscount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "_liquidityFee",
         "type": "uint256"
       }
     ],
     "name": "setFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_secondaryFeeToken",
-        "type": "address"
-      }
-    ],
-    "name": "setSecondaryFeeToken",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -577,7 +539,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "unlockDate",
+        "name": "unlockBlock",
         "type": "uint256"
       },
       {

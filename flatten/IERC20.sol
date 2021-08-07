@@ -1,10 +1,10 @@
-// Root file: contracts/interfaces/IERC20.sol
+// Root file: contracts/interfaces/IERC20Ext.sol
 
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.6.12;
 
-interface IERC20 {
+interface IERC20Ext {
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 

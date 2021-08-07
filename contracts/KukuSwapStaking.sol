@@ -2,15 +2,15 @@
 
 pragma solidity 0.6.12;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./interfaces/IERC20Ext.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "hardhat/console.sol";
 
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
 contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
-    IERC20 public KUKU;
-    IERC20 public WKCS;
+    IERC20Ext public KUKU;
+    IERC20Ext public WKCS;
 
     /// @notice struct for store distributin
     struct Distribution {
@@ -32,7 +32,7 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     mapping(address => bool) public authorized;
 
     /// @notice Define the KUKU and WKCS token contract
-    function initialize(IERC20 _KUKU, IERC20 _WKCS) public initializer {
+    function initialize(IERC20Ext _KUKU, IERC20Ext _WKCS) public initializer {
         KUKU = _KUKU;
         WKCS = _WKCS;
 
@@ -155,8 +155,8 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     }
 
     function updateTokenAddress(address _kuku, address _wkcs) external onlyOwner {
-        KUKU = IERC20(_kuku);
-        WKCS = IERC20(_wkcs);
+        KUKU = IERC20Ext(_kuku);
+        WKCS = IERC20Ext(_wkcs);
     }
 
     /// @notice create Distribution from authorized user or contract. ILO for example

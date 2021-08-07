@@ -12,6 +12,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import "hardhat/console.sol";
 
 contract KukuSwapLocker is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
@@ -28,7 +29,7 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         uint256 lockDate; // the date the token was locked
         uint256 amount; // the amount of tokens still locked (initialAmount minus withdrawls)
         uint256 initialAmount; // the initial lock amount
-        uint256 unlockDate; // the date the token can be withdrawn
+        uint256 unlockBlock; // the date the token can be withdrawn
         uint256 lockID; // lockID nonce per uni pair
         address owner;
     }
@@ -40,9 +41,6 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
 
     struct FeeStruct {
         uint256 kcsFee; // Small kcs fee to prevent spam on the platform
-        IERCBurn secondaryFeeToken; // KUKU
-        uint256 secondaryTokenFee; // KUKU Fee
-        uint256 secondaryTokenDiscount; // discount on liquidity fee for burning secondaryToken
         uint256 liquidityFee; // fee on kuku liquidity tokens
     }
 
@@ -51,14 +49,12 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
 
     address payable devaddr;
 
-    event onDeposit(address lpToken, address user, uint256 amount, uint256 lockDate, uint256 unlockDate);
+    event onDeposit(address lpToken, address user, uint256 amount, uint256 lockDate, uint256 unlockBlock);
     event onWithdraw(address lpToken, uint256 amount);
 
     constructor(IKukuSwapFactory _kukuswapFactory) public {
         devaddr = msg.sender;
-        gFees.kcsFee = 1e18;
-        gFees.secondaryTokenFee = 100e18;
-        gFees.secondaryTokenDiscount = 200; // 20%
+        gFees.kcsFee = 5e12;
         gFees.liquidityFee = 10; // 1%
         kukuswapFactory = _kukuswapFactory;
     }
@@ -67,19 +63,11 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         devaddr = _devaddr;
     }
 
-    function setSecondaryFeeToken(address _secondaryFeeToken) public onlyOwner {
-        gFees.secondaryFeeToken = IERCBurn(_secondaryFeeToken);
-    }
-
     function setFee(
         uint256 _kcsFee,
-        uint256 _secondaryTokenFee,
-        uint256 _secondaryTokenDiscount,
         uint256 _liquidityFee
     ) public onlyOwner {
         gFees.kcsFee = _kcsFee;
-        gFees.secondaryTokenFee = _secondaryTokenFee;
-        gFees.secondaryTokenDiscount = _secondaryTokenDiscount;
         gFees.liquidityFee = _liquidityFee;
     }
 
@@ -98,18 +86,20 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
      * @notice Creates a new lock
      * @param _lpToken the kuku token address
      * @param _amount amount of LP tokens to lock
-     * @param _unlock_date the unix timestamp (in seconds) until unlock
+     * @param _unlock_block the unix timestamp (in seconds) until unlock
      * @param _fee_in_kcs fees can be paid in kcs or in a secondary token such as UNCX with a discount on kuku tokens
      * @param _withdrawer the user who can withdraw liquidity once the lock expires.
      */
     function lockLPToken(
         address _lpToken,
         uint256 _amount,
-        uint256 _unlock_date,
+        uint256 _unlock_block,
         bool _fee_in_kcs,
         address payable _withdrawer
     ) external payable nonReentrant {
-        require(_unlock_date < 10000000000, "TIMESTAMP INVALID"); // prevents errors when timestamp entered in milliseconds
+
+        require(_unlock_block >= block.number, "INVALID UNLOCK BLOCK"); // prevents errors when timestamp entered in milliseconds
+
         require(_amount > 0, "INSUFFICIENT");
 
         // ensure this pair is a kuku pair by querying the factory
@@ -122,40 +112,38 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         // flatrate fees
         if (!feeWhitelist.contains(msg.sender)) {
             if (_fee_in_kcs) {
+
                 // charge fee in kcs
                 uint256 kcsFee = gFees.kcsFee;
 
-                require(msg.value == kcsFee, "FEE NOT MET");
+                require(msg.value >= kcsFee, "FEE NOT MET");
                 uint256 devFee = kcsFee;
 
                 devaddr.transfer(devFee);
-            } else {
-                // charge fee in token
-                uint256 burnFee = gFees.secondaryTokenFee;
 
-                TransferHelper.safeTransferFrom(address(gFees.secondaryFeeToken), address(msg.sender), address(this), burnFee);
-
-                gFees.secondaryFeeToken.burn(burnFee);
+                msg.sender.transfer(msg.value.sub(gFees.kcsFee));
             }
         } else if (msg.value > 0) {
             // refund kcs if a whitelisted member sent it by mistake
             msg.sender.transfer(msg.value);
         }
 
-        // percent fee
-        uint256 liquidityFee = _amount.mul(gFees.liquidityFee).div(1000);
-        if (!_fee_in_kcs && !feeWhitelist.contains(msg.sender)) {
-            // fee discount for large lockers using secondary token
-            liquidityFee = liquidityFee.mul(1000 - gFees.secondaryTokenDiscount).div(1000);
+        uint256 liquidityFee = 0;
+
+        if (!feeWhitelist.contains(msg.sender)) {
+                // percent fee
+            liquidityFee = _amount.mul(gFees.liquidityFee).div(1000);
+
+            TransferHelper.safeTransfer(_lpToken, devaddr, liquidityFee);
         }
-        TransferHelper.safeTransfer(_lpToken, devaddr, liquidityFee);
+        
         uint256 amountLocked = _amount.sub(liquidityFee);
 
         TokenLock memory token_lock;
         token_lock.lockDate = block.timestamp;
         token_lock.amount = amountLocked;
         token_lock.initialAmount = amountLocked;
-        token_lock.unlockDate = _unlock_date;
+        token_lock.unlockBlock = _unlock_block;
         token_lock.lockID = tokenLocks[_lpToken].length;
         token_lock.owner = _withdrawer;
 
@@ -169,7 +157,7 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         uint256[] storage user_locks = user.locksForToken[_lpToken];
         user_locks.push(token_lock.lockID);
 
-        emit onDeposit(_lpToken, msg.sender, token_lock.amount, token_lock.lockDate, token_lock.unlockDate);
+        emit onDeposit(_lpToken, msg.sender, token_lock.amount, token_lock.lockDate, token_lock.unlockBlock);
     }
 
     /**
@@ -180,22 +168,27 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         address _lpToken,
         uint256 _index,
         uint256 _lockID,
-        uint256 _unlock_date
+        uint256 _unlock_block
     ) external nonReentrant {
-        require(_unlock_date < 10000000000, "TIMESTAMP INVALID"); // prevents errors when timestamp entered in milliseconds
+        require(_unlock_block >= block.number, "INVALID UNLOCK BLOCK"); // prevents errors when timestamp entered in milliseconds
         uint256 lockID = users[msg.sender].locksForToken[_lpToken][_index];
         TokenLock storage userLock = tokenLocks[_lpToken][lockID];
         require(lockID == _lockID && userLock.owner == msg.sender, "LOCK MISMATCH"); // ensures correct lock is affected
-        require(userLock.unlockDate < _unlock_date, "UNLOCK BEFORE");
+        require(userLock.unlockBlock < _unlock_block, "UNLOCK BEFORE");
 
-        uint256 liquidityFee = userLock.amount.mul(gFees.liquidityFee).div(1000);
+        uint256 liquidityFee = 0;
+
+        if (!feeWhitelist.contains(msg.sender)) {
+            userLock.amount.mul(gFees.liquidityFee).div(1000);
+            // send kuku fee to dev address
+            TransferHelper.safeTransfer(_lpToken, devaddr, liquidityFee);
+        }
+
         uint256 amountLocked = userLock.amount.sub(liquidityFee);
 
         userLock.amount = amountLocked;
-        userLock.unlockDate = _unlock_date;
+        userLock.unlockBlock = _unlock_block;
 
-        // send kuku fee to dev address
-        TransferHelper.safeTransfer(_lpToken, devaddr, liquidityFee);
     }
 
     /**
@@ -212,7 +205,8 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         uint256 lockID = users[msg.sender].locksForToken[_lpToken][_index];
         TokenLock storage userLock = tokenLocks[_lpToken][lockID];
         require(lockID == _lockID && userLock.owner == msg.sender, "LOCK MISMATCH"); // ensures correct lock is affected
-        require(userLock.unlockDate < block.timestamp, "NOT YET");
+        require(userLock.unlockBlock < block.number, "NOT YET");
+
         userLock.amount = userLock.amount.sub(_amount);
 
         // clean user storage
@@ -245,14 +239,18 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
 
         TransferHelper.safeTransferFrom(_lpToken, address(msg.sender), address(this), _amount);
 
-        // send kuku fee to dev address
-        uint256 liquidityFee = _amount.mul(gFees.liquidityFee).div(1000);
-        TransferHelper.safeTransfer(_lpToken, devaddr, liquidityFee);
+        uint256 liquidityFee = 0;
+
+        if (!feeWhitelist.contains(msg.sender)) {
+             // send kuku fee to dev address
+            liquidityFee = _amount.mul(gFees.liquidityFee).div(1000);
+            TransferHelper.safeTransfer(_lpToken, devaddr, liquidityFee);
+        }
         uint256 amountLocked = _amount.sub(liquidityFee);
 
         userLock.amount = userLock.amount.add(amountLocked);
 
-        emit onDeposit(_lpToken, msg.sender, amountLocked, userLock.lockDate, userLock.unlockDate);
+        emit onDeposit(_lpToken, msg.sender, amountLocked, userLock.lockDate, userLock.unlockBlock);
     }
 
     /**
@@ -270,16 +268,13 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
         TokenLock storage userLock = tokenLocks[_lpToken][lockID];
         require(lockID == _lockID && userLock.owner == msg.sender, "LOCK MISMATCH"); // ensures correct lock is affected
 
-        require(msg.value == gFees.kcsFee, "FEE NOT MET");
-        devaddr.transfer(gFees.kcsFee);
-
         userLock.amount = userLock.amount.sub(_amount);
 
         TokenLock memory token_lock;
         token_lock.lockDate = userLock.lockDate;
         token_lock.amount = _amount;
         token_lock.initialAmount = _amount;
-        token_lock.unlockDate = userLock.unlockDate;
+        token_lock.unlockBlock = userLock.unlockBlock;
         token_lock.lockID = tokenLocks[_lpToken].length;
         token_lock.owner = msg.sender;
 
@@ -368,7 +363,7 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
     {
         uint256 lockID = users[_user].locksForToken[_lpToken][_index];
         TokenLock storage tokenLock = tokenLocks[_lpToken][lockID];
-        return (tokenLock.lockDate, tokenLock.amount, tokenLock.initialAmount, tokenLock.unlockDate, tokenLock.lockID, tokenLock.owner);
+        return (tokenLock.lockDate, tokenLock.amount, tokenLock.initialAmount, tokenLock.unlockBlock, tokenLock.lockID, tokenLock.owner);
     }
 
     // whitelist

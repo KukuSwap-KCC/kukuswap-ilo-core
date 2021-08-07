@@ -9,6 +9,14 @@ import { HardhatUserConfig } from "hardhat/types"
 // Go to https://hardhat.org/config/ to learn more
 
 const config: HardhatUserConfig = {
+  networks: {
+    hardhat: {
+      forking: {
+        url: "https://rpc-mainnet.kcc.network"
+      },
+      gas: 12450000
+    }
+  },
   abiExporter: {
     path: "./abi",
     clear: false,

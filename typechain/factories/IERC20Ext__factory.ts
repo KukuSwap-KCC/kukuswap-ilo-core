@@ -5,11 +5,14 @@
 import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
 
-import type { IERC20 } from "../IERC20";
+import type { IERC20Ext } from "../IERC20Ext";
 
-export class IERC20__factory {
-  static connect(address: string, signerOrProvider: Signer | Provider): IERC20 {
-    return new Contract(address, _abi, signerOrProvider) as IERC20;
+export class IERC20Ext__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IERC20Ext {
+    return new Contract(address, _abi, signerOrProvider) as IERC20Ext;
   }
 }
 
@@ -126,6 +129,19 @@ const _abi = [
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "decimals",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
       },
     ],
     stateMutability: "view",

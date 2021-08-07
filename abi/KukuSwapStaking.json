@@ -73,7 +73,7 @@
     "name": "KUKU",
     "outputs": [
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "",
         "type": "address"
       }
@@ -86,7 +86,7 @@
     "name": "WKCS",
     "outputs": [
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "",
         "type": "address"
       }
@@ -398,12 +398,12 @@
   {
     "inputs": [
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "_KUKU",
         "type": "address"
       },
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "_WKCS",
         "type": "address"
       }

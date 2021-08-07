@@ -8,7 +8,7 @@
 pragma solidity 0.6.12;
 
 import "./helpers/TransferHelper.sol";
-import "./interfaces/IERC20.sol";
+import "./interfaces/IERC20Ext.sol";
 import "./interfaces/IKukuSwapPresaleFactory.sol";
 import "./interfaces/IKukuSwapLocker.sol";
 import "./interfaces/IKukuSwapFactory.sol";
@@ -37,7 +37,7 @@ contract KukuSwapPresaleLockForwarder is IKukuSwapPresaleLockForwarder, Ownable 
         if (pairAddress == address(0)) {
             return false;
         }
-        uint256 balance = IERC20(_token0).balanceOf(pairAddress);
+        uint256 balance = IERC20Ext(_token0).balanceOf(pairAddress);
         if (balance > 0) {
             return true;
         }
@@ -45,8 +45,8 @@ contract KukuSwapPresaleLockForwarder is IKukuSwapPresaleLockForwarder, Ownable 
     }
 
     function lockLiquidity(
-        IERC20 _baseToken,
-        IERC20 _saleToken,
+        IERC20Ext _baseToken,
+        IERC20Ext _saleToken,
         uint256 _baseAmount,
         uint256 _saleAmount,
         uint256 _unlock_date,

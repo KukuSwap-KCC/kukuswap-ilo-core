@@ -1,9 +1,15 @@
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import { expect } from "chai";
 import { Address } from "cluster";
 
 describe("KukuSwapPresaleSettings", function () {
     before(async function () {
+
+        await network.provider.request({
+            method: "hardhat_reset",
+            params: [],
+        });
+
         this.Settings = await ethers.getContractFactory("KukuSwapPresaleSettings");
         this.KukuToken = await ethers.getContractFactory("ERC20Mock");
 

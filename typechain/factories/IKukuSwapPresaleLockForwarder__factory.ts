@@ -48,12 +48,12 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "contract IERC20",
+        internalType: "contract IERC20Ext",
         name: "_baseToken",
         type: "address",
       },
       {
-        internalType: "contract IERC20",
+        internalType: "contract IERC20Ext",
         name: "_saleToken",
         type: "address",
       },

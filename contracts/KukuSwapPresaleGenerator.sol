@@ -6,7 +6,7 @@ pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/IERC20.sol";
+import "./interfaces/IERC20Ext.sol";
 import "./interfaces/IKukuSwapLocker.sol";
 import "./interfaces/IKukuSwapPresaleFactory.sol";
 import "./helpers/TransferHelper.sol";
@@ -42,8 +42,8 @@ contract KukuSwapPresaleGenerator is Ownable {
      */
     function createPresale(
         address payable _presaleOwner,
-        IERC20 _presaleToken,
-        IERC20 _baseToken,
+        IERC20Ext _presaleToken,
+        IERC20Ext _baseToken,
         uint256[10] memory uint_params
     ) public payable {
         PresaleParams memory params;

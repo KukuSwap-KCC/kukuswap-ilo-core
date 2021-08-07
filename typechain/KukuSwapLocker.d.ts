@@ -41,8 +41,7 @@ interface KukuSwapLockerInterface extends ethers.utils.Interface {
     "relock(address,uint256,uint256,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setDev(address)": FunctionFragment;
-    "setFee(uint256,uint256,uint256,uint256)": FunctionFragment;
-    "setSecondaryFeeToken(address)": FunctionFragment;
+    "setFee(uint256,uint256)": FunctionFragment;
     "splitLock(address,uint256,uint256,uint256)": FunctionFragment;
     "tokenLocks(address,uint256)": FunctionFragment;
     "transferLockOwnership(address,uint256,uint256,address)": FunctionFragment;
@@ -116,11 +115,7 @@ interface KukuSwapLockerInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "setDev", values: [string]): string;
   encodeFunctionData(
     functionFragment: "setFee",
-    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setSecondaryFeeToken",
-    values: [string]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "splitLock",
@@ -208,10 +203,6 @@ interface KukuSwapLockerInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setDev", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setFee", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setSecondaryFeeToken",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "splitLock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tokenLocks", data: BytesLike): Result;
   decodeFunctionResult(
@@ -256,25 +247,13 @@ export class KukuSwapLocker extends Contract {
     gFees(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, BigNumber, BigNumber, BigNumber] & {
-        kcsFee: BigNumber;
-        secondaryFeeToken: string;
-        secondaryTokenFee: BigNumber;
-        secondaryTokenDiscount: BigNumber;
-        liquidityFee: BigNumber;
-      }
+      [BigNumber, BigNumber] & { kcsFee: BigNumber; liquidityFee: BigNumber }
     >;
 
     "gFees()"(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, BigNumber, BigNumber, BigNumber] & {
-        kcsFee: BigNumber;
-        secondaryFeeToken: string;
-        secondaryTokenFee: BigNumber;
-        secondaryTokenDiscount: BigNumber;
-        liquidityFee: BigNumber;
-      }
+      [BigNumber, BigNumber] & { kcsFee: BigNumber; liquidityFee: BigNumber }
     >;
 
     getLockedTokenAtIndex(
@@ -398,7 +377,7 @@ export class KukuSwapLocker extends Contract {
     lockLPToken(
       _lpToken: string,
       _amount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _fee_in_kcs: boolean,
       _withdrawer: string,
       overrides?: PayableOverrides
@@ -407,7 +386,7 @@ export class KukuSwapLocker extends Contract {
     "lockLPToken(address,uint256,uint256,bool,address)"(
       _lpToken: string,
       _amount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _fee_in_kcs: boolean,
       _withdrawer: string,
       overrides?: PayableOverrides
@@ -421,7 +400,7 @@ export class KukuSwapLocker extends Contract {
       _lpToken: string,
       _index: BigNumberish,
       _lockID: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -429,7 +408,7 @@ export class KukuSwapLocker extends Contract {
       _lpToken: string,
       _index: BigNumberish,
       _lockID: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -449,27 +428,13 @@ export class KukuSwapLocker extends Contract {
 
     setFee(
       _kcsFee: BigNumberish,
-      _secondaryTokenFee: BigNumberish,
-      _secondaryTokenDiscount: BigNumberish,
       _liquidityFee: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "setFee(uint256,uint256,uint256,uint256)"(
+    "setFee(uint256,uint256)"(
       _kcsFee: BigNumberish,
-      _secondaryTokenFee: BigNumberish,
-      _secondaryTokenDiscount: BigNumberish,
       _liquidityFee: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    setSecondaryFeeToken(
-      _secondaryFeeToken: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setSecondaryFeeToken(address)"(
-      _secondaryFeeToken: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -498,7 +463,7 @@ export class KukuSwapLocker extends Contract {
         lockDate: BigNumber;
         amount: BigNumber;
         initialAmount: BigNumber;
-        unlockDate: BigNumber;
+        unlockBlock: BigNumber;
         lockID: BigNumber;
         owner: string;
       }
@@ -513,7 +478,7 @@ export class KukuSwapLocker extends Contract {
         lockDate: BigNumber;
         amount: BigNumber;
         initialAmount: BigNumber;
-        unlockDate: BigNumber;
+        unlockBlock: BigNumber;
         lockID: BigNumber;
         owner: string;
       }
@@ -577,25 +542,13 @@ export class KukuSwapLocker extends Contract {
   gFees(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, BigNumber, BigNumber, BigNumber] & {
-      kcsFee: BigNumber;
-      secondaryFeeToken: string;
-      secondaryTokenFee: BigNumber;
-      secondaryTokenDiscount: BigNumber;
-      liquidityFee: BigNumber;
-    }
+    [BigNumber, BigNumber] & { kcsFee: BigNumber; liquidityFee: BigNumber }
   >;
 
   "gFees()"(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, BigNumber, BigNumber, BigNumber] & {
-      kcsFee: BigNumber;
-      secondaryFeeToken: string;
-      secondaryTokenFee: BigNumber;
-      secondaryTokenDiscount: BigNumber;
-      liquidityFee: BigNumber;
-    }
+    [BigNumber, BigNumber] & { kcsFee: BigNumber; liquidityFee: BigNumber }
   >;
 
   getLockedTokenAtIndex(
@@ -717,7 +670,7 @@ export class KukuSwapLocker extends Contract {
   lockLPToken(
     _lpToken: string,
     _amount: BigNumberish,
-    _unlock_date: BigNumberish,
+    _unlock_block: BigNumberish,
     _fee_in_kcs: boolean,
     _withdrawer: string,
     overrides?: PayableOverrides
@@ -726,7 +679,7 @@ export class KukuSwapLocker extends Contract {
   "lockLPToken(address,uint256,uint256,bool,address)"(
     _lpToken: string,
     _amount: BigNumberish,
-    _unlock_date: BigNumberish,
+    _unlock_block: BigNumberish,
     _fee_in_kcs: boolean,
     _withdrawer: string,
     overrides?: PayableOverrides
@@ -740,7 +693,7 @@ export class KukuSwapLocker extends Contract {
     _lpToken: string,
     _index: BigNumberish,
     _lockID: BigNumberish,
-    _unlock_date: BigNumberish,
+    _unlock_block: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -748,7 +701,7 @@ export class KukuSwapLocker extends Contract {
     _lpToken: string,
     _index: BigNumberish,
     _lockID: BigNumberish,
-    _unlock_date: BigNumberish,
+    _unlock_block: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -765,27 +718,13 @@ export class KukuSwapLocker extends Contract {
 
   setFee(
     _kcsFee: BigNumberish,
-    _secondaryTokenFee: BigNumberish,
-    _secondaryTokenDiscount: BigNumberish,
     _liquidityFee: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "setFee(uint256,uint256,uint256,uint256)"(
+  "setFee(uint256,uint256)"(
     _kcsFee: BigNumberish,
-    _secondaryTokenFee: BigNumberish,
-    _secondaryTokenDiscount: BigNumberish,
     _liquidityFee: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  setSecondaryFeeToken(
-    _secondaryFeeToken: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setSecondaryFeeToken(address)"(
-    _secondaryFeeToken: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -814,7 +753,7 @@ export class KukuSwapLocker extends Contract {
       lockDate: BigNumber;
       amount: BigNumber;
       initialAmount: BigNumber;
-      unlockDate: BigNumber;
+      unlockBlock: BigNumber;
       lockID: BigNumber;
       owner: string;
     }
@@ -829,7 +768,7 @@ export class KukuSwapLocker extends Contract {
       lockDate: BigNumber;
       amount: BigNumber;
       initialAmount: BigNumber;
-      unlockDate: BigNumber;
+      unlockBlock: BigNumber;
       lockID: BigNumber;
       owner: string;
     }
@@ -893,25 +832,13 @@ export class KukuSwapLocker extends Contract {
     gFees(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, BigNumber, BigNumber, BigNumber] & {
-        kcsFee: BigNumber;
-        secondaryFeeToken: string;
-        secondaryTokenFee: BigNumber;
-        secondaryTokenDiscount: BigNumber;
-        liquidityFee: BigNumber;
-      }
+      [BigNumber, BigNumber] & { kcsFee: BigNumber; liquidityFee: BigNumber }
     >;
 
     "gFees()"(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, BigNumber, BigNumber, BigNumber] & {
-        kcsFee: BigNumber;
-        secondaryFeeToken: string;
-        secondaryTokenFee: BigNumber;
-        secondaryTokenDiscount: BigNumber;
-        liquidityFee: BigNumber;
-      }
+      [BigNumber, BigNumber] & { kcsFee: BigNumber; liquidityFee: BigNumber }
     >;
 
     getLockedTokenAtIndex(
@@ -1035,7 +962,7 @@ export class KukuSwapLocker extends Contract {
     lockLPToken(
       _lpToken: string,
       _amount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _fee_in_kcs: boolean,
       _withdrawer: string,
       overrides?: CallOverrides
@@ -1044,7 +971,7 @@ export class KukuSwapLocker extends Contract {
     "lockLPToken(address,uint256,uint256,bool,address)"(
       _lpToken: string,
       _amount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _fee_in_kcs: boolean,
       _withdrawer: string,
       overrides?: CallOverrides
@@ -1058,7 +985,7 @@ export class KukuSwapLocker extends Contract {
       _lpToken: string,
       _index: BigNumberish,
       _lockID: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1066,7 +993,7 @@ export class KukuSwapLocker extends Contract {
       _lpToken: string,
       _index: BigNumberish,
       _lockID: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1083,27 +1010,13 @@ export class KukuSwapLocker extends Contract {
 
     setFee(
       _kcsFee: BigNumberish,
-      _secondaryTokenFee: BigNumberish,
-      _secondaryTokenDiscount: BigNumberish,
       _liquidityFee: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "setFee(uint256,uint256,uint256,uint256)"(
+    "setFee(uint256,uint256)"(
       _kcsFee: BigNumberish,
-      _secondaryTokenFee: BigNumberish,
-      _secondaryTokenDiscount: BigNumberish,
       _liquidityFee: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setSecondaryFeeToken(
-      _secondaryFeeToken: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setSecondaryFeeToken(address)"(
-      _secondaryFeeToken: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1132,7 +1045,7 @@ export class KukuSwapLocker extends Contract {
         lockDate: BigNumber;
         amount: BigNumber;
         initialAmount: BigNumber;
-        unlockDate: BigNumber;
+        unlockBlock: BigNumber;
         lockID: BigNumber;
         owner: string;
       }
@@ -1147,7 +1060,7 @@ export class KukuSwapLocker extends Contract {
         lockDate: BigNumber;
         amount: BigNumber;
         initialAmount: BigNumber;
-        unlockDate: BigNumber;
+        unlockBlock: BigNumber;
         lockID: BigNumber;
         owner: string;
       }
@@ -1219,7 +1132,7 @@ export class KukuSwapLocker extends Contract {
       user: null,
       amount: null,
       lockDate: null,
-      unlockDate: null
+      unlockBlock: null
     ): EventFilter;
 
     onWithdraw(lpToken: null, amount: null): EventFilter;
@@ -1351,7 +1264,7 @@ export class KukuSwapLocker extends Contract {
     lockLPToken(
       _lpToken: string,
       _amount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _fee_in_kcs: boolean,
       _withdrawer: string,
       overrides?: PayableOverrides
@@ -1360,7 +1273,7 @@ export class KukuSwapLocker extends Contract {
     "lockLPToken(address,uint256,uint256,bool,address)"(
       _lpToken: string,
       _amount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _fee_in_kcs: boolean,
       _withdrawer: string,
       overrides?: PayableOverrides
@@ -1374,7 +1287,7 @@ export class KukuSwapLocker extends Contract {
       _lpToken: string,
       _index: BigNumberish,
       _lockID: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -1382,7 +1295,7 @@ export class KukuSwapLocker extends Contract {
       _lpToken: string,
       _index: BigNumberish,
       _lockID: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -1399,27 +1312,13 @@ export class KukuSwapLocker extends Contract {
 
     setFee(
       _kcsFee: BigNumberish,
-      _secondaryTokenFee: BigNumberish,
-      _secondaryTokenDiscount: BigNumberish,
       _liquidityFee: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "setFee(uint256,uint256,uint256,uint256)"(
+    "setFee(uint256,uint256)"(
       _kcsFee: BigNumberish,
-      _secondaryTokenFee: BigNumberish,
-      _secondaryTokenDiscount: BigNumberish,
       _liquidityFee: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setSecondaryFeeToken(
-      _secondaryFeeToken: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setSecondaryFeeToken(address)"(
-      _secondaryFeeToken: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -1640,7 +1539,7 @@ export class KukuSwapLocker extends Contract {
     lockLPToken(
       _lpToken: string,
       _amount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _fee_in_kcs: boolean,
       _withdrawer: string,
       overrides?: PayableOverrides
@@ -1649,7 +1548,7 @@ export class KukuSwapLocker extends Contract {
     "lockLPToken(address,uint256,uint256,bool,address)"(
       _lpToken: string,
       _amount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _fee_in_kcs: boolean,
       _withdrawer: string,
       overrides?: PayableOverrides
@@ -1663,7 +1562,7 @@ export class KukuSwapLocker extends Contract {
       _lpToken: string,
       _index: BigNumberish,
       _lockID: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -1671,7 +1570,7 @@ export class KukuSwapLocker extends Contract {
       _lpToken: string,
       _index: BigNumberish,
       _lockID: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -1691,27 +1590,13 @@ export class KukuSwapLocker extends Contract {
 
     setFee(
       _kcsFee: BigNumberish,
-      _secondaryTokenFee: BigNumberish,
-      _secondaryTokenDiscount: BigNumberish,
       _liquidityFee: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "setFee(uint256,uint256,uint256,uint256)"(
+    "setFee(uint256,uint256)"(
       _kcsFee: BigNumberish,
-      _secondaryTokenFee: BigNumberish,
-      _secondaryTokenDiscount: BigNumberish,
       _liquidityFee: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    setSecondaryFeeToken(
-      _secondaryFeeToken: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setSecondaryFeeToken(address)"(
-      _secondaryFeeToken: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

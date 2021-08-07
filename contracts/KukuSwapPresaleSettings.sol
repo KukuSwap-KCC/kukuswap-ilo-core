@@ -7,7 +7,7 @@ pragma solidity 0.6.12;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "./interfaces/IKukuSwapPresaleSettings.sol";
-import "./interfaces/IERC20.sol";
+import "./interfaces/IERC20Ext.sol";
 
 contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -87,7 +87,7 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
         }
         for (uint256 i = 0; i < earlyAccessTokensLength(); i++) {
             (address token, uint256 amountHold) = getEarlyAccessTokenAtIndex(i);
-            if (IERC20(token).balanceOf(_user) >= amountHold) {
+            if (IERC20Ext(token).balanceOf(_user) >= amountHold) {
                 return true;
             }
         }

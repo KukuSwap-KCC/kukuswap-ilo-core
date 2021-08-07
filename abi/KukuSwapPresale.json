@@ -119,12 +119,12 @@
         "type": "address"
       },
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "S_TOKEN",
         "type": "address"
       },
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "B_TOKEN",
         "type": "address"
       },
@@ -435,12 +435,12 @@
   {
     "inputs": [
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "_baseToken",
         "type": "address"
       },
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "_presaleToken",
         "type": "address"
       },

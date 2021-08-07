@@ -57,12 +57,12 @@
         "type": "address"
       },
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "_presaleToken",
         "type": "address"
       },
       {
-        "internalType": "contract IERC20",
+        "internalType": "contract IERC20Ext",
         "name": "_baseToken",
         "type": "address"
       },
