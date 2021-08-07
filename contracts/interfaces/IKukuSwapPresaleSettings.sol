@@ -11,5 +11,4 @@ interface IKukuSwapPresaleSettings {
     function getBaseFee() external view returns (uint256);
 
     function getStakingAddress() external view returns (address payable);
-
 }

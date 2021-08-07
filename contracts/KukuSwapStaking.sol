@@ -51,11 +51,9 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
         _;
     }
 
-
     /// @notice Enter the Staking. Pay some KUKUs. Earn some shares.
     // Locks KUKU and mints KUKU ST
     function enter(uint256 _amount) external {
-    
         // Gets the amount of KUKU locked in the contract
         uint256 totalKUKU = KUKU.balanceOf(address(this));
         // Gets the amount of KUKU ST in existence

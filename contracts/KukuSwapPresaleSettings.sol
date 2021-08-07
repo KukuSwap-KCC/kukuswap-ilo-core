@@ -34,10 +34,10 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
         SETTINGS.MAX_PRESALE_LENGTH = 93046; // 2 weeks
     }
 
-
-    function getStakingAddress() external view override returns(address payable) {
+    function getStakingAddress() external view override returns (address payable) {
         return SETTINGS.STAKING_ADDRESS;
     }
+
     function getRound1Length() external view override returns (uint256) {
         return SETTINGS.ROUND1_LENGTH;
     }
