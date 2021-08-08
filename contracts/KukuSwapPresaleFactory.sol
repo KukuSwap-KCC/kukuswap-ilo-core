@@ -16,7 +16,6 @@ contract KukuSwapPresaleFactory is IKukuSwapPresaleFactory, OwnableUpgradeable {
 
     mapping(address => EnumerableSet.AddressSet) private presaleOwners;
 
-
     event presaleRegistered(address presaleContract);
 
     function initialize() public initializer {
@@ -79,7 +78,6 @@ contract KukuSwapPresaleFactory is IKukuSwapPresaleFactory, OwnableUpgradeable {
         return presaleOwners[_owner].at(_index);
     }
 
-    
     /**
      * @notice The length of all presales on the platform
      */

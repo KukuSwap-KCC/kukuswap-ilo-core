@@ -123,13 +123,8 @@ contract KukuSwapPresaleGenerator is OwnableUpgradeable {
         uint256 _amount,
         uint256 _tokenPrice,
         uint256 _listingRate,
-        uint256 _liquidityPercent) public pure returns (uint256 amount) {
-        
-        amount  = PresaleHelper.calculateAmountRequired(
-            _amount,
-            _tokenPrice,
-            _listingRate,
-            _liquidityPercent
-        );
+        uint256 _liquidityPercent
+    ) public pure returns (uint256 amount) {
+        amount = PresaleHelper.calculateAmountRequired(_amount, _tokenPrice, _listingRate, _liquidityPercent);
     }
 }

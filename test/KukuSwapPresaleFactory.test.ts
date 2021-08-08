@@ -13,6 +13,8 @@ describe("KukuSwapPresaleFactory", function () {
         this.generator = (await ethers.getSigners())[1];
 
         this.presale = (await ethers.getSigners())[2];
+
+        this.presaleOwner = (await ethers.getSigners())[3];
     });
 
     beforeEach(async function () {
@@ -44,7 +46,7 @@ describe("KukuSwapPresaleFactory", function () {
 
         await this.factory
             .connect(this.generator)
-            .registerPresale(this.presale.address);
+            .registerPresale(this.presale.address, this.presaleOwner.address);
 
         expect(
             await this.factory.presaleIsRegistered(this.presale.address)
@@ -55,7 +57,7 @@ describe("KukuSwapPresaleFactory", function () {
 
     it("should not register presale from regular user", async function () {
         await expect(
-            this.factory.connect(this.presale).registerPresale(this.presale.address)
+            this.factory.connect(this.presale).registerPresale(this.presale.address, this.presaleOwner.address)
         ).to.be.revertedWith("FORBIDDEN");
     });
 });

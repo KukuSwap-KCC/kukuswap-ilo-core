@@ -1,5 +1,6 @@
 import { ethers, network, waffle } from "hardhat";
 import { expect } from "chai";
+import { throws } from "assert";
 
 describe("KukuSwapPresaleLockForwarder", function () {
     const userAddress = ethers.utils.getAddress(
@@ -79,6 +80,8 @@ describe("KukuSwapPresaleLockForwarder", function () {
         this.presale = await ethers.getSigner(userAddress);
 
         this.generator = (await ethers.getSigners())[1];
+
+        this.presaleOwner = (await ethers.getSigners())[2]
     });
 
     it("should lock liqiduity from presale for existing pair", async function () {
@@ -88,7 +91,7 @@ describe("KukuSwapPresaleLockForwarder", function () {
 
         await this.factory
             .connect(this.generator)
-            .registerPresale(this.presale.address);
+            .registerPresale(this.presale.address, this.presaleOwner.address);
 
         await this.wkcs
             .connect(this.presale)
@@ -109,20 +112,20 @@ describe("KukuSwapPresaleLockForwarder", function () {
                 ethers.utils.parseEther("0.001"),
                 ethers.utils.parseEther("100"),
                 unlockBlockNumber,
-                this.presale.address
+                this.presaleOwner.address
             );
 
         expect(await this.locker.getNumLockedTokens()).to.be.equal(1);
 
         const lock = await this.locker.getUserLockForTokenAtIndex(
-            this.presale.address,
+            this.presaleOwner.address,
             this.lpToken.address,
             0
         );
 
         expect(lock[1]).to.be.gte(0);
         expect(lock[3]).to.be.equal(unlockBlockNumber);
-        expect(lock[5]).to.be.equal(this.presale.address);
+        expect(lock[5]).to.be.equal(this.presaleOwner.address);
         expect(await this.locker.getLockedTokenAtIndex(0)).to.be.equal(
             this.lpToken.address
         );
@@ -135,7 +138,7 @@ describe("KukuSwapPresaleLockForwarder", function () {
 
         await this.factory
             .connect(this.generator)
-            .registerPresale(this.presale.address);
+            .registerPresale(this.presale.address, this.presaleOwner.address);
 
         await this.wkcs
             .connect(this.presale)
@@ -156,7 +159,7 @@ describe("KukuSwapPresaleLockForwarder", function () {
                 ethers.utils.parseEther("0.001"),
                 ethers.utils.parseEther("0.001"),
                 unlockBlockNumber,
-                this.presale.address
+                this.presaleOwner.address
             );
 
         expect(await this.locker.getNumLockedTokens()).to.be.equal(2);
@@ -164,13 +167,13 @@ describe("KukuSwapPresaleLockForwarder", function () {
         const lpToken = await this.locker.getLockedTokenAtIndex(1);
 
         const lock = await this.locker.getUserLockForTokenAtIndex(
-            this.presale.address,
+            this.presaleOwner.address,
             lpToken,
             0
         );
 
         expect(lock[1]).to.be.gte(0);
         expect(lock[3]).to.be.equal(unlockBlockNumber);
-        expect(lock[5]).to.be.equal(this.presale.address);
+        expect(lock[5]).to.be.equal(this.presaleOwner.address);
     });
 });

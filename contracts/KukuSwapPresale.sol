@@ -122,7 +122,7 @@ contract KukuSwapPresale is ReentrancyGuard {
         address payable _baseFeeAddress
     ) external {
         require(msg.sender == PRESALE_GENERATOR, "FORBIDDEN");
-        require(!PRESALE_LOCK_FORWARDER.kukuswapPairIsInitialised(address(_presaleToken), address(_baseToken)), 'PAIR INITIALISED');
+        require(!PRESALE_LOCK_FORWARDER.kukuswapPairIsInitialised(address(_presaleToken), address(_baseToken)), "PAIR INITIALISED");
 
         PRESALE_INFO.PRESALE_IN_KCS = address(_baseToken) == address(WKCS);
         PRESALE_INFO.S_TOKEN = _presaleToken;
@@ -273,7 +273,7 @@ contract KukuSwapPresale is ReentrancyGuard {
         if (PRESALE_INFO.PRESALE_IN_KCS) {
             WKCS.deposit{value: baseLiquidity}();
         }
-        
+
         TransferHelper.safeApprove(address(PRESALE_INFO.B_TOKEN), address(PRESALE_LOCK_FORWARDER), baseLiquidity);
 
         // sale token liquidity
