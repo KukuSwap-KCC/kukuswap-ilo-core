@@ -33,7 +33,9 @@ describe("KukuSwapLocker", function () {
 
         this.user2 = (await ethers.getSigners())[1];
 
-        this.locker = await this.Locker.deploy(
+        this.locker = await this.Locker.deploy();
+
+        await this.locker.initialize(
             ethers.utils.getAddress("0x852ead547a013cc1e35ee41454af7a8d75a7b49d")
         ); //Kuku Factory
 

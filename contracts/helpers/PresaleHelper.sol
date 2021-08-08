@@ -16,7 +16,7 @@ library PresaleHelper {
         uint256 _tokenPrice,
         uint256 _listingRate,
         uint256 _liquidityPercent
-    ) public pure returns (uint256) {
+    ) internal pure returns (uint256) {
         uint256 listingRatePercent = _listingRate.mul(1000).div(_tokenPrice);
         uint256 liquidityRequired = _amount.mul(_liquidityPercent).mul(listingRatePercent).div(1000000);
         uint256 tokensRequiredForPresale = _amount.add(liquidityRequired);

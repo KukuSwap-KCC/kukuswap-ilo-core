@@ -6,14 +6,13 @@ pragma solidity 0.6.12;
 
 import "./interfaces/IKukuSwapPair.sol";
 import "./interfaces/IKukuSwapFactory.sol";
-import "./interfaces/IERCBurn.sol";
 import "./helpers/TransferHelper.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-contract KukuSwapLocker is Ownable, ReentrancyGuard {
+contract KukuSwapLocker is OwnableUpgradeable, ReentrancyGuard {
     using SafeMath for uint256;
     using EnumerableSet for EnumerableSet.AddressSet;
 
@@ -51,11 +50,12 @@ contract KukuSwapLocker is Ownable, ReentrancyGuard {
     event onDeposit(address lpToken, address user, uint256 amount, uint256 lockDate, uint256 unlockBlock);
     event onWithdraw(address lpToken, uint256 amount);
 
-    constructor(IKukuSwapFactory _kukuswapFactory) public {
+    function initialize(IKukuSwapFactory _kukuswapFactory) public initializer {
         devaddr = msg.sender;
         gFees.kcsFee = 5e12;
         gFees.liquidityFee = 10; // 1%
         kukuswapFactory = _kukuswapFactory;
+        OwnableUpgradeable.__Ownable_init();
     }
 
     function setDev(address payable _devaddr) public onlyOwner {

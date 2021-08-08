@@ -1,7 +1,7 @@
 import { ethers, network, waffle } from "hardhat";
 import { expect } from "chai";
 
-describe("KukuSwapPresaleFactory", function () {
+describe("KukuSwapPresaleLockForwarder", function () {
     const userAddress = ethers.utils.getAddress(
         "0xe3905ED0fd3Fa86001ee98A01b32ab732e8E3c27"
     );
@@ -60,11 +60,17 @@ describe("KukuSwapPresaleFactory", function () {
         this.Locker = await ethers.getContractFactory("KukuSwapLocker");
 
         // deploy contracts
-        this.locker = await this.Locker.deploy(kukuFactory); //Kuku Factory
+        this.locker = await this.Locker.deploy();
+
+        this.locker.initialize(kukuFactory);
 
         this.factory = await this.Factory.deploy();
 
-        this.forwarder = await this.Forwarder.deploy(
+        this.forwarder = await this.Forwarder.deploy();
+
+        await this.factory.initialize();
+
+        await this.forwarder.initialize(
             this.factory.address,
             this.locker.address,
             kukuFactory

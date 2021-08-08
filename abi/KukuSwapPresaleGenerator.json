@@ -1,10 +1,5 @@
 [
   {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -73,8 +68,47 @@
       }
     ],
     "name": "createPresale",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "contract KukuSwapPresale",
+        "name": "newPresale",
+        "type": "address"
+      }
+    ],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wkcs",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_settings",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lockForwarder",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_devAddress",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

@@ -35,6 +35,7 @@ interface KukuSwapLockerInterface extends ethers.utils.Interface {
     "getWhitelistedUserAtIndex(uint256)": FunctionFragment;
     "getWhitelistedUsersLength()": FunctionFragment;
     "incrementLock(address,uint256,uint256,uint256)": FunctionFragment;
+    "initialize(address)": FunctionFragment;
     "kukuswapFactory()": FunctionFragment;
     "lockLPToken(address,uint256,uint256,bool,address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -95,6 +96,7 @@ interface KukuSwapLockerInterface extends ethers.utils.Interface {
     functionFragment: "incrementLock",
     values: [string, BigNumberish, BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(
     functionFragment: "kukuswapFactory",
     values?: undefined
@@ -187,6 +189,7 @@ interface KukuSwapLockerInterface extends ethers.utils.Interface {
     functionFragment: "incrementLock",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "kukuswapFactory",
     data: BytesLike
@@ -367,6 +370,16 @@ export class KukuSwapLocker extends Contract {
       _index: BigNumberish,
       _lockID: BigNumberish,
       _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    initialize(
+      _kukuswapFactory: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "initialize(address)"(
+      _kukuswapFactory: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -663,6 +676,16 @@ export class KukuSwapLocker extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  initialize(
+    _kukuswapFactory: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "initialize(address)"(
+    _kukuswapFactory: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   kukuswapFactory(overrides?: CallOverrides): Promise<string>;
 
   "kukuswapFactory()"(overrides?: CallOverrides): Promise<string>;
@@ -952,6 +975,16 @@ export class KukuSwapLocker extends Contract {
       _index: BigNumberish,
       _lockID: BigNumberish,
       _amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    initialize(
+      _kukuswapFactory: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "initialize(address)"(
+      _kukuswapFactory: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1257,6 +1290,16 @@ export class KukuSwapLocker extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    initialize(
+      _kukuswapFactory: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "initialize(address)"(
+      _kukuswapFactory: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     kukuswapFactory(overrides?: CallOverrides): Promise<BigNumber>;
 
     "kukuswapFactory()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1527,6 +1570,16 @@ export class KukuSwapLocker extends Contract {
       _index: BigNumberish,
       _lockID: BigNumberish,
       _amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _kukuswapFactory: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "initialize(address)"(
+      _kukuswapFactory: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

@@ -5,19 +5,24 @@
 pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./interfaces/IERC20Ext.sol";
 import "./interfaces/IKukuSwapLocker.sol";
 import "./interfaces/IKukuSwapPresaleFactory.sol";
+import "./interfaces/IKukuSwapStaking.sol";
 import "./helpers/TransferHelper.sol";
 import "./helpers/PresaleHelper.sol";
 import "./KukuSwapPresale.sol";
 
-contract KukuSwapPresaleGenerator is Ownable {
+contract KukuSwapPresaleGenerator is OwnableUpgradeable {
     using SafeMath for uint256;
 
     IKukuSwapPresaleFactory public PRESALE_FACTORY;
     IKukuSwapPresaleSettings public PRESALE_SETTINGS;
+
+    address WKCS;
+    address PRESALE_LOCK_FORWARDER;
+    address DEV_ADDRESS;
 
     struct PresaleParams {
         uint256 amount;
@@ -32,9 +37,20 @@ contract KukuSwapPresaleGenerator is Ownable {
         uint256 lockPeriod;
     }
 
-    constructor() public {
-        PRESALE_FACTORY = IKukuSwapPresaleFactory(address(0x0));
-        PRESALE_SETTINGS = IKukuSwapPresaleSettings(address(0x0));
+    function initialize(
+        address _factory,
+        address _wkcs,
+        address _settings,
+        address _lockForwarder,
+        address _devAddress
+    ) public initializer {
+        PRESALE_FACTORY = IKukuSwapPresaleFactory(_factory);
+        PRESALE_SETTINGS = IKukuSwapPresaleSettings(_settings);
+        WKCS = _wkcs;
+        PRESALE_LOCK_FORWARDER = _lockForwarder;
+        DEV_ADDRESS = _devAddress;
+
+        OwnableUpgradeable.__Ownable_init();
     }
 
     /**
@@ -45,7 +61,7 @@ contract KukuSwapPresaleGenerator is Ownable {
         IERC20Ext _presaleToken,
         IERC20Ext _baseToken,
         uint256[10] memory uint_params
-    ) public payable {
+    ) public payable returns (KukuSwapPresale newPresale) {
         PresaleParams memory params;
         params.amount = uint_params[0];
         params.tokenPrice = uint_params[1];
@@ -74,7 +90,15 @@ contract KukuSwapPresaleGenerator is Ownable {
             params.liquidityPercent
         );
 
-        KukuSwapPresale newPresale = new KukuSwapPresale(address(this));
+        newPresale = new KukuSwapPresale(
+            address(this),
+            address(PRESALE_FACTORY),
+            WKCS,
+            address(PRESALE_SETTINGS),
+            address(PRESALE_LOCK_FORWARDER),
+            DEV_ADDRESS
+        );
+
         TransferHelper.safeTransferFrom(address(_presaleToken), address(msg.sender), address(newPresale), tokensRequiredForPresale);
         newPresale.init1(
             _presaleOwner,
@@ -91,5 +115,7 @@ contract KukuSwapPresaleGenerator is Ownable {
         );
         newPresale.init2(_baseToken, _presaleToken, PRESALE_SETTINGS.getBaseFee(), PRESALE_SETTINGS.getStakingAddress());
         PRESALE_FACTORY.registerPresale(address(newPresale));
+
+        IKukuSwapStaking(PRESALE_SETTINGS.getStakingAddress()).authorize(address(newPresale), true);
     }
 }

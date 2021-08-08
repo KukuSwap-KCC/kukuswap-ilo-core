@@ -4,12 +4,12 @@
 
 pragma solidity 0.6.12;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "./interfaces/IKukuSwapPresaleSettings.sol";
 import "./interfaces/IERC20Ext.sol";
 
-contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
+contract KukuSwapPresaleSettings is OwnableUpgradeable, IKukuSwapPresaleSettings {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     EnumerableSet.AddressSet private EARLY_ACCESS_TOKENS;
@@ -26,12 +26,14 @@ contract KukuSwapPresaleSettings is Ownable, IKukuSwapPresaleSettings {
 
     Settings public SETTINGS;
 
-    constructor(address _stakingAddress) public {
+    function initialize(address _stakingAddress) public initializer {
         require(_stakingAddress != address(0x0), "PresaleSettings: staking address zero");
         SETTINGS.BASE_FEE = 50; // 5%
         SETTINGS.STAKING_ADDRESS = payable(_stakingAddress);
         SETTINGS.ROUND1_LENGTH = 1200; // 1200 blocks = 2 hours, 1 block 3 seconds
         SETTINGS.MAX_PRESALE_LENGTH = 93046; // 2 weeks
+
+        OwnableUpgradeable.__Ownable_init();
     }
 
     function getStakingAddress() external view override returns (address payable) {

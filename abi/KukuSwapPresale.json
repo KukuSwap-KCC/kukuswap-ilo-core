@@ -5,6 +5,31 @@
         "internalType": "address",
         "name": "_presaleGenerator",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wkcs",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_settings",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lockForwarder",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_devAddress",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",

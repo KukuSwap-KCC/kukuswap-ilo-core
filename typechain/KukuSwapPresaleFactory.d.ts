@@ -23,6 +23,7 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface KukuSwapPresaleFactoryInterface extends ethers.utils.Interface {
   functions: {
     "adminAllowPresaleGenerator(address,bool)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "owner()": FunctionFragment;
     "presaleAtIndex(uint256)": FunctionFragment;
     "presaleGeneratorAtIndex(uint256)": FunctionFragment;
@@ -37,6 +38,10 @@ interface KukuSwapPresaleFactoryInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "adminAllowPresaleGenerator",
     values: [string, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -76,6 +81,7 @@ interface KukuSwapPresaleFactoryInterface extends ethers.utils.Interface {
     functionFragment: "adminAllowPresaleGenerator",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "presaleAtIndex",
@@ -144,6 +150,10 @@ export class KukuSwapPresaleFactory extends Contract {
       _allow: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    initialize(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "initialize()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -226,6 +236,10 @@ export class KukuSwapPresaleFactory extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  initialize(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "initialize()"(overrides?: Overrides): Promise<ContractTransaction>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   "owner()"(overrides?: CallOverrides): Promise<string>;
@@ -304,6 +318,10 @@ export class KukuSwapPresaleFactory extends Contract {
       _allow: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    initialize(overrides?: CallOverrides): Promise<void>;
+
+    "initialize()"(overrides?: CallOverrides): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -394,6 +412,10 @@ export class KukuSwapPresaleFactory extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    initialize(overrides?: Overrides): Promise<BigNumber>;
+
+    "initialize()"(overrides?: Overrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -473,6 +495,10 @@ export class KukuSwapPresaleFactory extends Contract {
       _allow: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    initialize(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "initialize()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

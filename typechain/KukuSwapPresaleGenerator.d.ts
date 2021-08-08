@@ -26,6 +26,7 @@ interface KukuSwapPresaleGeneratorInterface extends ethers.utils.Interface {
     "PRESALE_FACTORY()": FunctionFragment;
     "PRESALE_SETTINGS()": FunctionFragment;
     "createPresale(address,address,address,uint256[10])": FunctionFragment;
+    "initialize(address,address,address,address,address)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
@@ -59,6 +60,10 @@ interface KukuSwapPresaleGeneratorInterface extends ethers.utils.Interface {
       ]
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [string, string, string, string, string]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -81,6 +86,7 @@ interface KukuSwapPresaleGeneratorInterface extends ethers.utils.Interface {
     functionFragment: "createPresale",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -158,6 +164,24 @@ export class KukuSwapPresaleGenerator extends Contract {
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
+    initialize(
+      _factory: string,
+      _wkcs: string,
+      _settings: string,
+      _lockForwarder: string,
+      _devAddress: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "initialize(address,address,address,address,address)"(
+      _factory: string,
+      _wkcs: string,
+      _settings: string,
+      _lockForwarder: string,
+      _devAddress: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     "owner()"(overrides?: CallOverrides): Promise<[string]>;
@@ -223,6 +247,24 @@ export class KukuSwapPresaleGenerator extends Contract {
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
+  initialize(
+    _factory: string,
+    _wkcs: string,
+    _settings: string,
+    _lockForwarder: string,
+    _devAddress: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "initialize(address,address,address,address,address)"(
+    _factory: string,
+    _wkcs: string,
+    _settings: string,
+    _lockForwarder: string,
+    _devAddress: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   "owner()"(overrides?: CallOverrides): Promise<string>;
@@ -267,7 +309,7 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish
       ],
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<string>;
 
     "createPresale(address,address,address,uint256[10])"(
       _presaleOwner: string,
@@ -285,6 +327,24 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish,
         BigNumberish
       ],
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    initialize(
+      _factory: string,
+      _wkcs: string,
+      _settings: string,
+      _lockForwarder: string,
+      _devAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "initialize(address,address,address,address,address)"(
+      _factory: string,
+      _wkcs: string,
+      _settings: string,
+      _lockForwarder: string,
+      _devAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -361,6 +421,24 @@ export class KukuSwapPresaleGenerator extends Contract {
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
+    initialize(
+      _factory: string,
+      _wkcs: string,
+      _settings: string,
+      _lockForwarder: string,
+      _devAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "initialize(address,address,address,address,address)"(
+      _factory: string,
+      _wkcs: string,
+      _settings: string,
+      _lockForwarder: string,
+      _devAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -429,6 +507,24 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish
       ],
       overrides?: PayableOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _factory: string,
+      _wkcs: string,
+      _settings: string,
+      _lockForwarder: string,
+      _devAddress: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "initialize(address,address,address,address,address)"(
+      _factory: string,
+      _wkcs: string,
+      _settings: string,
+      _lockForwarder: string,
+      _devAddress: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;

@@ -5,10 +5,10 @@
 pragma solidity 0.6.12;
 
 import "./interfaces/IKukuSwapPresaleFactory.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
-contract KukuSwapPresaleFactory is IKukuSwapPresaleFactory, Ownable {
+contract KukuSwapPresaleFactory is IKukuSwapPresaleFactory, OwnableUpgradeable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     EnumerableSet.AddressSet private presales;
@@ -17,6 +17,10 @@ contract KukuSwapPresaleFactory is IKukuSwapPresaleFactory, Ownable {
     mapping(address => EnumerableSet.AddressSet) private presaleOwners;
 
     event presaleRegistered(address presaleContract);
+
+    function initialize() public initializer {
+        OwnableUpgradeable.__Ownable_init();
+    }
 
     function adminAllowPresaleGenerator(address _address, bool _allow) public onlyOwner {
         if (_allow) {

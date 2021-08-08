@@ -17,6 +17,8 @@ describe("KukuSwapPresaleFactory", function () {
 
     beforeEach(async function () {
         this.factory = await this.Factory.deploy();
+
+        await this.factory.initialize();
     });
 
     it("should allow admin access for presale generator", async function () {

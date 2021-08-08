@@ -14,21 +14,23 @@ import "./interfaces/IKukuSwapLocker.sol";
 import "./interfaces/IKukuSwapFactory.sol";
 import "./interfaces/IKukuSwapPair.sol";
 import "./interfaces/IKukuSwapPresaleLockForwarder.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract KukuSwapPresaleLockForwarder is IKukuSwapPresaleLockForwarder, Ownable {
+contract KukuSwapPresaleLockForwarder is IKukuSwapPresaleLockForwarder, OwnableUpgradeable {
     IKukuSwapPresaleFactory public PRESALE_FACTORY;
     IKukuSwapLocker public KUKUSWAP_LOCKER;
     IKukuSwapFactory public KUKU_FACTORY;
 
-    constructor(
+    function initialize(
         address _factory,
         address _locker,
         address _kukuFactory
-    ) public {
+    ) public initializer {
         PRESALE_FACTORY = IKukuSwapPresaleFactory(_factory);
         KUKUSWAP_LOCKER = IKukuSwapLocker(_locker);
         KUKU_FACTORY = IKukuSwapFactory(_kukuFactory);
+
+        OwnableUpgradeable.__Ownable_init();
     }
 
     /**

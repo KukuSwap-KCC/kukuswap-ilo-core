@@ -34,7 +34,7 @@ contract KukuSwapPresale is ReentrancyGuard {
         uint256 LISTING_RATE; // fixed rate at which the token will list on kukuswap
         uint256 START_BLOCK;
         uint256 END_BLOCK;
-        uint256 LOCK_PERIOD; // unix timestamp -> e.g. 2 weeks
+        uint256 LOCK_PERIOD; // blocks -> e.g, for example 2 weeks, 1 block per 3 sec, 2 weeks = 403.200
         bool PRESALE_IN_KCS; // if this flag is true the presale is raising KCS, otherwise an ERC20 token such as DAI
     }
 
@@ -73,13 +73,20 @@ contract KukuSwapPresale is ReentrancyGuard {
     mapping(address => BuyerInfo) public BUYERS;
     EnumerableSet.AddressSet private WHITELIST;
 
-    constructor(address _presaleGenerator) public {
+    constructor(
+        address _presaleGenerator,
+        address _factory,
+        address _wkcs,
+        address _settings,
+        address _lockForwarder,
+        address _devAddress
+    ) public {
         PRESALE_GENERATOR = _presaleGenerator;
-        KUKU_FACTORY = IKukuSwapFactory(address(0x0));
-        WKCS = IWKCS(address(0x0));
-        PRESALE_SETTINGS = IKukuSwapPresaleSettings(address(0x0));
-        PRESALE_LOCK_FORWARDER = IKukuSwapPresaleLockForwarder(address(0x0));
-        DEV_ADDRESS = address(0x0);
+        KUKU_FACTORY = IKukuSwapFactory(_factory);
+        WKCS = IWKCS(_wkcs);
+        PRESALE_SETTINGS = IKukuSwapPresaleSettings(_settings);
+        PRESALE_LOCK_FORWARDER = IKukuSwapPresaleLockForwarder(_lockForwarder);
+        DEV_ADDRESS = address(_devAddress);
     }
 
     function init1(
@@ -278,16 +285,16 @@ contract KukuSwapPresale is ReentrancyGuard {
             PRESALE_INFO.S_TOKEN,
             baseLiquidity,
             tokenLiquidity,
-            block.timestamp + PRESALE_INFO.LOCK_PERIOD,
+            block.number + PRESALE_INFO.LOCK_PERIOD,
             PRESALE_INFO.PRESALE_OWNER
         );
 
-        TransferHelper.safeTransferBaseToken(
+        /*TransferHelper.safeTransferBaseToken(
             address(PRESALE_INFO.B_TOKEN),
             PRESALE_FEE_INFO.BASE_FEE_ADDRESS,
             kukuBaseFee,
             !PRESALE_INFO.PRESALE_IN_KCS
-        );
+        );*/
 
         // burn unsold tokens
         uint256 remainingSBalance = PRESALE_INFO.S_TOKEN.balanceOf(address(this));

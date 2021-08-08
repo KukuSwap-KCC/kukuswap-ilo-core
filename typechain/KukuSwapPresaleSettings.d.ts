@@ -31,6 +31,7 @@ interface KukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
     "getMaxPresaleLength()": FunctionFragment;
     "getRound1Length()": FunctionFragment;
     "getStakingAddress()": FunctionFragment;
+    "initialize(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setFee(uint256)": FunctionFragment;
@@ -74,6 +75,7 @@ interface KukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
     functionFragment: "getStakingAddress",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -134,6 +136,7 @@ interface KukuSwapPresaleSettingsInterface extends ethers.utils.Interface {
     functionFragment: "getStakingAddress",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -259,6 +262,16 @@ export class KukuSwapPresaleSettings extends Contract {
     getStakingAddress(overrides?: CallOverrides): Promise<[string]>;
 
     "getStakingAddress()"(overrides?: CallOverrides): Promise<[string]>;
+
+    initialize(
+      _stakingAddress: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "initialize(address)"(
+      _stakingAddress: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -401,6 +414,16 @@ export class KukuSwapPresaleSettings extends Contract {
   getStakingAddress(overrides?: CallOverrides): Promise<string>;
 
   "getStakingAddress()"(overrides?: CallOverrides): Promise<string>;
+
+  initialize(
+    _stakingAddress: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "initialize(address)"(
+    _stakingAddress: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -547,6 +570,16 @@ export class KukuSwapPresaleSettings extends Contract {
 
     "getStakingAddress()"(overrides?: CallOverrides): Promise<string>;
 
+    initialize(
+      _stakingAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "initialize(address)"(
+      _stakingAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     "owner()"(overrides?: CallOverrides): Promise<string>;
@@ -678,6 +711,16 @@ export class KukuSwapPresaleSettings extends Contract {
     getStakingAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getStakingAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      _stakingAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "initialize(address)"(
+      _stakingAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -814,6 +857,16 @@ export class KukuSwapPresaleSettings extends Contract {
 
     "getStakingAddress()"(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _stakingAddress: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "initialize(address)"(
+      _stakingAddress: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;

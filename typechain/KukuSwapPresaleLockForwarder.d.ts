@@ -25,6 +25,7 @@ interface KukuSwapPresaleLockForwarderInterface extends ethers.utils.Interface {
     "KUKUSWAP_LOCKER()": FunctionFragment;
     "KUKU_FACTORY()": FunctionFragment;
     "PRESALE_FACTORY()": FunctionFragment;
+    "initialize(address,address,address)": FunctionFragment;
     "kukuswapPairIsInitialised(address,address)": FunctionFragment;
     "lockLiquidity(address,address,uint256,uint256,uint256,address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -43,6 +44,10 @@ interface KukuSwapPresaleLockForwarderInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "PRESALE_FACTORY",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [string, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "kukuswapPairIsInitialised",
@@ -74,6 +79,7 @@ interface KukuSwapPresaleLockForwarderInterface extends ethers.utils.Interface {
     functionFragment: "PRESALE_FACTORY",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "kukuswapPairIsInitialised",
     data: BytesLike
@@ -124,6 +130,20 @@ export class KukuSwapPresaleLockForwarder extends Contract {
     PRESALE_FACTORY(overrides?: CallOverrides): Promise<[string]>;
 
     "PRESALE_FACTORY()"(overrides?: CallOverrides): Promise<[string]>;
+
+    initialize(
+      _factory: string,
+      _locker: string,
+      _kukuFactory: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "initialize(address,address,address)"(
+      _factory: string,
+      _locker: string,
+      _kukuFactory: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
     kukuswapPairIsInitialised(
       _token0: string,
@@ -188,6 +208,20 @@ export class KukuSwapPresaleLockForwarder extends Contract {
 
   "PRESALE_FACTORY()"(overrides?: CallOverrides): Promise<string>;
 
+  initialize(
+    _factory: string,
+    _locker: string,
+    _kukuFactory: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "initialize(address,address,address)"(
+    _factory: string,
+    _locker: string,
+    _kukuFactory: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   kukuswapPairIsInitialised(
     _token0: string,
     _token1: string,
@@ -250,6 +284,20 @@ export class KukuSwapPresaleLockForwarder extends Contract {
     PRESALE_FACTORY(overrides?: CallOverrides): Promise<string>;
 
     "PRESALE_FACTORY()"(overrides?: CallOverrides): Promise<string>;
+
+    initialize(
+      _factory: string,
+      _locker: string,
+      _kukuFactory: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "initialize(address,address,address)"(
+      _factory: string,
+      _locker: string,
+      _kukuFactory: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     kukuswapPairIsInitialised(
       _token0: string,
@@ -322,6 +370,20 @@ export class KukuSwapPresaleLockForwarder extends Contract {
 
     "PRESALE_FACTORY()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    initialize(
+      _factory: string,
+      _locker: string,
+      _kukuFactory: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "initialize(address,address,address)"(
+      _factory: string,
+      _locker: string,
+      _kukuFactory: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     kukuswapPairIsInitialised(
       _token0: string,
       _token1: string,
@@ -388,6 +450,20 @@ export class KukuSwapPresaleLockForwarder extends Contract {
 
     "PRESALE_FACTORY()"(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      _factory: string,
+      _locker: string,
+      _kukuFactory: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "initialize(address,address,address)"(
+      _factory: string,
+      _locker: string,
+      _kukuFactory: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     kukuswapPairIsInitialised(

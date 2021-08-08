@@ -19,7 +19,9 @@ describe("KukuSwapPresaleSettings", function () {
     });
 
     beforeEach(async function () {
-        this.settings = await this.Settings.deploy(this.staking.address);
+        this.settings = await this.Settings.deploy();
+        await this.settings.initialize(this.staking.address);
+
         this.kuku = await this.KukuToken.deploy();
 
         await this.kuku.mint(this.owner.address, "1000");
@@ -81,7 +83,7 @@ describe("KukuSwapPresaleSettings", function () {
     });
 
     it("should  be edited early access tokens from owner address", async function () {
-        this.settings
+        await this.settings
             .connect(this.owner)
             .editEarlyAccessTokens(this.kuku.address, 100, true);
 
@@ -95,7 +97,7 @@ describe("KukuSwapPresaleSettings", function () {
     });
 
     it("should corrent return if user holds sufficient Round1 token", async function () {
-        this.settings
+        await this.settings
             .connect(this.owner)
             .editEarlyAccessTokens(this.kuku.address, 100, true);
 
