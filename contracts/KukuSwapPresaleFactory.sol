@@ -16,6 +16,7 @@ contract KukuSwapPresaleFactory is IKukuSwapPresaleFactory, OwnableUpgradeable {
 
     mapping(address => EnumerableSet.AddressSet) private presaleOwners;
 
+
     event presaleRegistered(address presaleContract);
 
     function initialize() public initializer {
@@ -33,9 +34,12 @@ contract KukuSwapPresaleFactory is IKukuSwapPresaleFactory, OwnableUpgradeable {
     /**
      * @notice called by a registered PresaleGenerator upon Presale creation
      */
-    function registerPresale(address _presaleAddress) public override {
+    function registerPresale(address _presaleAddress, address _presaleOwner) public override {
         require(presaleGenerators.contains(msg.sender), "FORBIDDEN");
         presales.add(_presaleAddress);
+
+        presaleOwners[_presaleOwner].add(_presaleAddress);
+
         emit presaleRegistered(_presaleAddress);
     }
 
@@ -60,6 +64,22 @@ contract KukuSwapPresaleFactory is IKukuSwapPresaleFactory, OwnableUpgradeable {
         return presales.contains(_presaleAddress);
     }
 
+    /**
+     * @notice The length of all presales on the platform
+     */
+    function presalesLengthByUser(address _owner) external view returns (uint256) {
+        return presaleOwners[_owner].length();
+    }
+
+    /**
+     * @notice gets a presale at a specific index. Although using Enumerable Set, since presales are only added and not removed, indexes will never change
+     * @return the address of the Presale contract at index
+     */
+    function presaleAtIndexByUser(address _owner, uint256 _index) external view returns (address) {
+        return presaleOwners[_owner].at(_index);
+    }
+
+    
     /**
      * @notice The length of all presales on the platform
      */

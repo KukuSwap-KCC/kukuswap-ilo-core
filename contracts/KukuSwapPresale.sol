@@ -41,7 +41,6 @@ contract KukuSwapPresale is ReentrancyGuard {
     struct PresaleFeeInfo {
         uint256 KUKU_BASE_FEE; // divided by 1000
         address payable BASE_FEE_ADDRESS;
-        address payable TOKEN_FEE_ADDRESS;
     }
 
     struct PresaleStatus {
@@ -123,7 +122,7 @@ contract KukuSwapPresale is ReentrancyGuard {
         address payable _baseFeeAddress
     ) external {
         require(msg.sender == PRESALE_GENERATOR, "FORBIDDEN");
-        // require(!PRESALE_LOCK_FORWARDER.kukuswapPairIsInitialised(address(_presaleToken), address(_baseToken)), 'PAIR INITIALISED');
+        require(!PRESALE_LOCK_FORWARDER.kukuswapPairIsInitialised(address(_presaleToken), address(_baseToken)), 'PAIR INITIALISED');
 
         PRESALE_INFO.PRESALE_IN_KCS = address(_baseToken) == address(WKCS);
         PRESALE_INFO.S_TOKEN = _presaleToken;
@@ -274,6 +273,7 @@ contract KukuSwapPresale is ReentrancyGuard {
         if (PRESALE_INFO.PRESALE_IN_KCS) {
             WKCS.deposit{value: baseLiquidity}();
         }
+        
         TransferHelper.safeApprove(address(PRESALE_INFO.B_TOKEN), address(PRESALE_LOCK_FORWARDER), baseLiquidity);
 
         // sale token liquidity
@@ -322,7 +322,7 @@ contract KukuSwapPresale is ReentrancyGuard {
     // postpone or bring a presale forward, this will only work when a presale is inactive.
     // i.e. current start block > block.number
     function updateBlocks(uint256 _startBlock, uint256 _endBlock) external onlyPresaleOwner {
-        require(PRESALE_INFO.START_BLOCK > block.number);
+        require(PRESALE_INFO.START_BLOCK > block.number, "PRESALE IS ACTIVE");
         require(_endBlock.sub(_startBlock) <= PRESALE_SETTINGS.getMaxPresaleLength());
         PRESALE_INFO.START_BLOCK = _startBlock;
         PRESALE_INFO.END_BLOCK = _endBlock;

@@ -14,7 +14,8 @@ const config: HardhatUserConfig = {
       forking: {
         url: "https://rpc-mainnet.kcc.network"
       },
-      gas: 12450000
+      gas: 12450000,
+      gasPrice: 0
     }
   },
   abiExporter: {

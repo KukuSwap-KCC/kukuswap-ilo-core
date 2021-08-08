@@ -74,8 +74,8 @@ contract KukuSwapPresaleGenerator is OwnableUpgradeable {
         params.endblock = uint_params[8];
         params.lockPeriod = uint_params[9];
 
-        if (params.lockPeriod < 4 weeks) {
-            params.lockPeriod = 4 weeks;
+        if (params.lockPeriod < 806400 weeks) {
+            params.lockPeriod = 806400; //4 weeks
         }
 
         require(params.amount >= 10000, "MIN DIVIS"); // minimum divisibility
@@ -83,7 +83,7 @@ contract KukuSwapPresaleGenerator is OwnableUpgradeable {
         require(params.tokenPrice.mul(params.hardcap) > 0, "INVALID PARAMS"); // ensure no overflow for future calculations
         require(params.liquidityPercent >= 300 && params.liquidityPercent <= 1000, "MIN LIQUIDITY"); // 30% minimum liquidity lock
 
-        uint256 tokensRequiredForPresale = PresaleHelper.calculateAmountRequired(
+        uint256 tokensRequiredForPresale = tokensRequiredForPresale(
             params.amount,
             params.tokenPrice,
             params.listingRate,
@@ -114,8 +114,22 @@ contract KukuSwapPresaleGenerator is OwnableUpgradeable {
             params.lockPeriod
         );
         newPresale.init2(_baseToken, _presaleToken, PRESALE_SETTINGS.getBaseFee(), PRESALE_SETTINGS.getStakingAddress());
-        PRESALE_FACTORY.registerPresale(address(newPresale));
+        PRESALE_FACTORY.registerPresale(address(newPresale), _presaleOwner);
 
         IKukuSwapStaking(PRESALE_SETTINGS.getStakingAddress()).authorize(address(newPresale), true);
+    }
+
+    function tokensRequiredForPresale(
+        uint256 _amount,
+        uint256 _tokenPrice,
+        uint256 _listingRate,
+        uint256 _liquidityPercent) public pure returns (uint256 amount) {
+        
+        amount  = PresaleHelper.calculateAmountRequired(
+            _amount,
+            _tokenPrice,
+            _listingRate,
+            _liquidityPercent
+        );
     }
 }

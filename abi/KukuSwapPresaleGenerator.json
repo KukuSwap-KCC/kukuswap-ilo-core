@@ -1,0 +1,181 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "PRESALE_FACTORY",
+    "outputs": [
+      {
+        "internalType": "contract IKukuSwapPresaleFactory",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PRESALE_SETTINGS",
+    "outputs": [
+      {
+        "internalType": "contract IKukuSwapPresaleSettings",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "_presaleOwner",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IERC20Ext",
+        "name": "_presaleToken",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IERC20Ext",
+        "name": "_baseToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[10]",
+        "name": "uint_params",
+        "type": "uint256[10]"
+      }
+    ],
+    "name": "createPresale",
+    "outputs": [
+      {
+        "internalType": "contract KukuSwapPresale",
+        "name": "newPresale",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wkcs",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_settings",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lockForwarder",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_devAddress",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_listingRate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_liquidityPercent",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokensRequiredForPresale",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
