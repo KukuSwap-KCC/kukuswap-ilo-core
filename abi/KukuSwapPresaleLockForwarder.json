@@ -1,6 +1,22 @@
 [
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_locker",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_kukuFactory",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -110,7 +126,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_unlock_date",
+        "name": "_unlock_block",
         "type": "uint256"
       },
       {

@@ -21,10 +21,14 @@ contract KukuSwapPresaleLockForwarder is IKukuSwapPresaleLockForwarder, Ownable 
     IKukuSwapLocker public KUKUSWAP_LOCKER;
     IKukuSwapFactory public KUKU_FACTORY;
 
-    constructor() public {
-        PRESALE_FACTORY = IKukuSwapPresaleFactory(address(0x0));
-        KUKUSWAP_LOCKER = IKukuSwapLocker(address(0x0));
-        KUKU_FACTORY = IKukuSwapFactory(address(0x0));
+    constructor(
+        address _factory,
+        address _locker,
+        address _kukuFactory
+    ) public {
+        PRESALE_FACTORY = IKukuSwapPresaleFactory(_factory);
+        KUKUSWAP_LOCKER = IKukuSwapLocker(_locker);
+        KUKU_FACTORY = IKukuSwapFactory(_kukuFactory);
     }
 
     /**
@@ -49,7 +53,7 @@ contract KukuSwapPresaleLockForwarder is IKukuSwapPresaleLockForwarder, Ownable 
         IERC20Ext _saleToken,
         uint256 _baseAmount,
         uint256 _saleAmount,
-        uint256 _unlock_date,
+        uint256 _unlock_block,
         address payable _withdrawer
     ) external override {
         require(PRESALE_FACTORY.presaleIsRegistered(msg.sender), "PRESALE NOT REGISTERED");
@@ -66,7 +70,7 @@ contract KukuSwapPresaleLockForwarder is IKukuSwapPresaleLockForwarder, Ownable 
         require(totalLPTokensMinted != 0, "LP creation failed");
 
         TransferHelper.safeApprove(pair, address(KUKUSWAP_LOCKER), totalLPTokensMinted);
-        uint256 unlock_date = _unlock_date > 9999999999 ? 9999999999 : _unlock_date;
-        KUKUSWAP_LOCKER.lockLPToken(pair, totalLPTokensMinted, unlock_date, true, _withdrawer);
+
+        KUKUSWAP_LOCKER.lockLPToken(pair, totalLPTokensMinted, _unlock_block, true, _withdrawer);
     }
 }

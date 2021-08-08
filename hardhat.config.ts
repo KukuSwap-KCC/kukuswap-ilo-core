@@ -30,7 +30,7 @@ const config: HardhatUserConfig = {
   },
   defaultNetwork: "hardhat",
   mocha: {
-    timeout: 20000,
+    timeout: 100000,
   },
   solidity: {
     compilers: [

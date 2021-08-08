@@ -1,6 +1,5 @@
 import { ethers, network, waffle } from "hardhat";
 import { expect } from "chai";
-import { throws } from "assert";
 
 describe("KukuSwapPresaleFactory", function () {
     before(async function () {

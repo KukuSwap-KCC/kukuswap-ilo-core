@@ -142,7 +142,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
       _saleToken: string,
       _baseAmount: BigNumberish,
       _saleAmount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _withdrawer: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -152,7 +152,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
       _saleToken: string,
       _baseAmount: BigNumberish,
       _saleAmount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _withdrawer: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -205,7 +205,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
     _saleToken: string,
     _baseAmount: BigNumberish,
     _saleAmount: BigNumberish,
-    _unlock_date: BigNumberish,
+    _unlock_block: BigNumberish,
     _withdrawer: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -215,7 +215,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
     _saleToken: string,
     _baseAmount: BigNumberish,
     _saleAmount: BigNumberish,
-    _unlock_date: BigNumberish,
+    _unlock_block: BigNumberish,
     _withdrawer: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -268,7 +268,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
       _saleToken: string,
       _baseAmount: BigNumberish,
       _saleAmount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _withdrawer: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -278,7 +278,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
       _saleToken: string,
       _baseAmount: BigNumberish,
       _saleAmount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _withdrawer: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -339,7 +339,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
       _saleToken: string,
       _baseAmount: BigNumberish,
       _saleAmount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _withdrawer: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -349,7 +349,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
       _saleToken: string,
       _baseAmount: BigNumberish,
       _saleAmount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _withdrawer: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -407,7 +407,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
       _saleToken: string,
       _baseAmount: BigNumberish,
       _saleAmount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _withdrawer: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
@@ -417,7 +417,7 @@ export class KukuSwapPresaleLockForwarder extends Contract {
       _saleToken: string,
       _baseAmount: BigNumberish,
       _saleAmount: BigNumberish,
-      _unlock_date: BigNumberish,
+      _unlock_block: BigNumberish,
       _withdrawer: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
