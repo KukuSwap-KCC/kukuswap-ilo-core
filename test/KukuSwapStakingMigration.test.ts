@@ -104,6 +104,13 @@ describe("KukuSwapStakingMigration", function () {
 
         const totalShares = await this.staking.totalSupply();
 
+        let shares = await this.staking.shares(
+            1,
+            this.staker.address
+        );
+        
+        expect(shares).to.be.gt(0)
+
         await this.staking.connect(this.owner).enter("20");
 
         await this.wkcs.connect(this.minter).approve(this.staking.address, "100", {
@@ -120,7 +127,7 @@ describe("KukuSwapStakingMigration", function () {
         expect(lastDistributionIndex).to.equal("1");
         const distribution = await this.staking.distributions(lastDistributionIndex);
 
-        const shares = await this.staking.shares(
+        shares = await this.staking.shares(
             lastDistributionIndex,
             this.owner.address
         );

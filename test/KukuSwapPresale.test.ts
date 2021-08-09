@@ -313,6 +313,17 @@ describe("KukuSwapPresale User Operation - Success Presale", function () {
         expect(
             await this.locker.getUserNumLockedTokens(this.presaleOwner.address)
         ).to.be.equal("1");
+
+        //staking contract distribution
+
+        expect(await this.wkcs.balanceOf(this.staking.address)).to.be.gt(0);
+
+        let lastDistributionIndex = await this.staking.lastDistributionIndex();
+        expect(lastDistributionIndex).to.equal("1");
+
+        let distribution = await this.staking.distributions(lastDistributionIndex);
+        expect(distribution.amount).to.gt(0)
+        expect(distribution.token).to.equal(this.wkcs.address);
     });
 });
 
@@ -1145,6 +1156,17 @@ describe("KukuSwapPresale Simple Operation with KUKU as Base Token", function ()
         expect(await this.bnb.balanceOf(this.kukuHolder.address)).to.be.equal(
             kukuBalanceBefore.add(ethers.utils.parseEther("10"))
         );
+
+        //staking contract distribution
+
+        expect(await this.kuku.balanceOf(this.staking.address)).to.be.gt(0);
+
+        let lastDistributionIndex = await this.staking.lastDistributionIndex();
+        expect(lastDistributionIndex).to.equal("1");
+
+        let distribution = await this.staking.distributions(lastDistributionIndex);
+        expect(distribution.amount).to.gt(0)
+        expect(distribution.token).to.equal(this.kuku.address);
     });
 });
 
