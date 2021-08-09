@@ -292,7 +292,12 @@ describe("KukuSwapPresale User Operation - Success Presale", function () {
             });
         }
 
+        const ownerBalanceBefore = await this.presaleOwner.getBalance();
         await presale.connect(this.presaleOwner).addLiquidity();
+
+        //presale Owner
+        expect(await this.presaleOwner.getBalance()).to.be.gt(ownerBalanceBefore);
+
 
         //investor 1
         await presale.connect(this.investor).userWithdrawTokens();
@@ -1121,7 +1126,11 @@ describe("KukuSwapPresale Simple Operation with KUKU as Base Token", function ()
             });
         }
 
+        const ownerBalanceBefore = await this.kuku.balanceOf(this.presaleOwner.address);
+
         await presale.connect(this.presaleOwner).addLiquidity();
+
+        expect(await this.kuku.balanceOf(this.presaleOwner.address)).to.be.gt(ownerBalanceBefore)
 
         const kukuBalanceBefore = await this.bnb.balanceOf(this.kukuHolder.address);
 
