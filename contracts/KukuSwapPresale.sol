@@ -6,6 +6,7 @@ import "./interfaces/IKukuSwapFactory.sol";
 import "./interfaces/IKukuSwapPresaleSettings.sol";
 import "./interfaces/IWKCS.sol";
 import "./interfaces/IERC20Ext.sol";
+import "./interfaces/IKukuSwapStaking.sol";
 import "./helpers/TransferHelper.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
@@ -271,7 +272,7 @@ contract KukuSwapPresale is ReentrancyGuard {
         // base token liquidity
         uint256 baseLiquidity = STATUS.TOTAL_BASE_COLLECTED.sub(kukuBaseFee).mul(PRESALE_INFO.LIQUIDITY_PERCENT).div(1000);
         if (PRESALE_INFO.PRESALE_IN_KCS) {
-            WKCS.deposit{value: baseLiquidity}();
+            WKCS.deposit{value: baseLiquidity.add(kukuBaseFee)}();
         }
 
         TransferHelper.safeApprove(address(PRESALE_INFO.B_TOKEN), address(PRESALE_LOCK_FORWARDER), baseLiquidity);
@@ -289,12 +290,9 @@ contract KukuSwapPresale is ReentrancyGuard {
             PRESALE_INFO.PRESALE_OWNER
         );
 
-        /*TransferHelper.safeTransferBaseToken(
-            address(PRESALE_INFO.B_TOKEN),
-            PRESALE_FEE_INFO.BASE_FEE_ADDRESS,
-            kukuBaseFee,
-            !PRESALE_INFO.PRESALE_IN_KCS
-        );*/
+        TransferHelper.safeApprove(address(PRESALE_INFO.B_TOKEN), address(PRESALE_FEE_INFO.BASE_FEE_ADDRESS), kukuBaseFee);
+
+        IKukuSwapStaking(PRESALE_FEE_INFO.BASE_FEE_ADDRESS).createDistribution(kukuBaseFee, address(PRESALE_INFO.B_TOKEN));
 
         // burn unsold tokens
         uint256 remainingSBalance = PRESALE_INFO.S_TOKEN.balanceOf(address(this));
