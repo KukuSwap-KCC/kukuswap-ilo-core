@@ -46,7 +46,7 @@ describe("KukuSwapStaking", function () {
 
     it("should not allow create distribution from non-authirized", async function () {
         await expect(
-            this.staking.connect(this.bob).createDistribution("100")
+            this.staking.connect(this.bob).createDistribution("100", this.WKCS.address)
         ).to.be.revertedWith("KukuSwap Staking: not authorized user");
     });
 
@@ -106,7 +106,7 @@ describe("KukuSwapStaking", function () {
         });
         await this.staking
             .connect(this.minter)
-            .createDistribution("100", { from: this.minter.address });
+            .createDistribution("100", this.WKCS.address, { from: this.minter.address });
 
         const lastDistributionIndex = await this.staking.lastDistributionIndex();
         expect(lastDistributionIndex).to.equal("1");
@@ -133,7 +133,7 @@ describe("KukuSwapStaking", function () {
 
         await this.staking
             .connect(this.minter)
-            .createDistribution("100", { from: this.minter.address });
+            .createDistribution("100", this.WKCS.address, { from: this.minter.address });
         let lastDistributionIndex = await this.staking.lastDistributionIndex();
         expect(lastDistributionIndex).to.equal("1");
         let distribution = await this.staking.distributions(lastDistributionIndex);
@@ -145,7 +145,7 @@ describe("KukuSwapStaking", function () {
         expect(shares).to.equal("20");
         expect(distribution.amount).to.equal("100");
         expect(distribution.shares).to.equal("20");
-
+        expect(distribution.token).to.equal(this.WKCS.address)
         expect(await this.WKCS.balanceOf(this.staking.address)).to.equal("100");
 
         await this.staking.leave("10");
@@ -158,7 +158,7 @@ describe("KukuSwapStaking", function () {
 
         await this.staking
             .connect(this.minter)
-            .createDistribution("200", { from: this.minter.address });
+            .createDistribution("200", this.WKCS.address, { from: this.minter.address });
 
         lastDistributionIndex = await this.staking.lastDistributionIndex();
         expect(lastDistributionIndex).to.equal("2");
@@ -167,6 +167,7 @@ describe("KukuSwapStaking", function () {
         expect(shares).to.equal("80");
         expect(distribution.amount).to.equal("200");
         expect(distribution.shares).to.equal("80");
+        expect(distribution.token).to.equal(this.WKCS.address)
         await this.staking.enter("100");
 
         lastDistributionIndex = await this.staking.lastDistributionIndex();
@@ -180,7 +181,7 @@ describe("KukuSwapStaking", function () {
         expect(distribution.amount).to.equal("200");
         expect(distribution.shares).to.equal("80");
 
-        expect(await this.staking.getRewardsAmount(this.alice.address)).to.equal("200");
+        expect(await this.staking.getRewardsAmount(this.alice.address, this.WKCS.address)).to.equal("200");
         expect(await this.staking.getStakingAmount(this.alice.address)).to.equal("180");
 
         await this.staking.transfer(this.bob.address, "90");
@@ -202,6 +203,7 @@ describe("KukuSwapStaking", function () {
         await this.staking.leave("10");
         expect(await this.WKCS.balanceOf(this.alice.address)).to.equal("300");
     });
+
 
     it("should claim one distribution with more than one participant", async function () {
         await this.kuku.approve(this.staking.address, "100");
@@ -227,13 +229,14 @@ describe("KukuSwapStaking", function () {
         });
         await this.staking
             .connect(this.minter)
-            .createDistribution("100", { from: this.minter.address });
+            .createDistribution("100", this.WKCS.address, { from: this.minter.address });
         const lastDistributionIndex = await this.staking.lastDistributionIndex();
         expect(lastDistributionIndex).to.equal("1");
         const distribution = await this.staking.distributions(lastDistributionIndex);
         const totalShares = await this.staking.totalSupply();
         expect(distribution.amount).to.equal("100");
         expect(distribution.shares).to.equal(totalShares);
+        expect(distribution.token).to.equal(this.WKCS.address);
         //Alica shares in 1 distribution 26
         const aliceShares = await this.staking.shares(
             lastDistributionIndex,
@@ -264,6 +267,7 @@ describe("KukuSwapStaking", function () {
         expect(await this.WKCS.balanceOf(this.bob.address)).to.equal("27");
     });
 
+
     it("should claim one distribution with more than one participant", async function () {
         await this.kuku.approve(this.staking.address, "100");
         await this.kuku
@@ -288,13 +292,14 @@ describe("KukuSwapStaking", function () {
         });
         await this.staking
             .connect(this.minter)
-            .createDistribution("100", { from: this.minter.address });
+            .createDistribution("100", this.WKCS.address, { from: this.minter.address });
         const lastDistributionIndex = await this.staking.lastDistributionIndex();
         expect(lastDistributionIndex).to.equal("1");
         const distribution = await this.staking.distributions(lastDistributionIndex);
         const totalShares = await this.staking.totalSupply();
         expect(distribution.amount).to.equal("100");
         expect(distribution.shares).to.equal(totalShares);
+        expect(distribution.token).to.equal(this.WKCS.address);
         //Alica shares in 1 distribution 26
         const aliceShares = await this.staking.shares(
             lastDistributionIndex,
@@ -350,7 +355,7 @@ describe("KukuSwapStaking", function () {
         });
         await this.staking
             .connect(this.minter)
-            .createDistribution("100", { from: this.minter.address });
+            .createDistribution("100", this.WKCS.address, { from: this.minter.address });
 
         let lastDistributionIndex = await this.staking.lastDistributionIndex();
         expect(lastDistributionIndex).to.equal("1");
@@ -358,6 +363,7 @@ describe("KukuSwapStaking", function () {
         let totalShares = await this.staking.totalSupply();
         expect(distribution.amount).to.equal("100");
         expect(distribution.shares).to.equal(totalShares);
+        expect(distribution.token).to.equal(this.WKCS.address);
 
         //Alica shares in 1 distribution 26
         const aliceShares = await this.staking.shares(
@@ -378,7 +384,7 @@ describe("KukuSwapStaking", function () {
         });
         await this.staking
             .connect(this.minter)
-            .createDistribution("100", { from: this.minter.address });
+            .createDistribution("100", this.WKCS.address, { from: this.minter.address });
 
         lastDistributionIndex = await this.staking.lastDistributionIndex();
         expect(lastDistributionIndex).to.equal("2");
@@ -387,7 +393,7 @@ describe("KukuSwapStaking", function () {
         expect(distribution.amount).to.equal("100");
         expect(distribution.shares).to.equal(totalShares);
 
-        expect(await this.staking.getRewardsAmount(this.alice.address)).to.equal("144");
+        expect(await this.staking.getRewardsAmount(this.alice.address, this.WKCS.address)).to.equal("144");
 
         // Alice get 26 shares * 100 / 36 = 72 WKCS
         await this.staking

@@ -15,6 +15,7 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     struct Distribution {
         uint256 shares; //total shares
         uint256 amount; //amount for distribution
+        address token; //token address
     }
 
     /// @notice index=>Distribution
@@ -131,10 +132,12 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     }
 
     /// @notice get reward amount
-    function getRewardsAmount(address _user) external view returns (uint256 amountToClaim) {
+    function getRewardsAmount(address _user, address _token) external view returns (uint256 amountToClaim) {
         for (uint256 i = 1; i <= lastDistributionIndex; i++) {
             if (!claimed[_user][i]) {
-                amountToClaim += _getRewardAmount(i, _user);
+                if (distributions[i].token == _token) {
+                    amountToClaim += _getRewardAmount(i, _user);
+                }
             }
         }
     }
@@ -159,14 +162,14 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     }
 
     /// @notice create Distribution from authorized user or contract. ILO for example
-    function createDistribution(uint256 _amount) external virtual isAuthorized {
-        Distribution memory d = Distribution(totalSupply(), _amount);
+    function createDistribution(uint256 _amount, address _token) external virtual isAuthorized {
+        Distribution memory d = Distribution(totalSupply(), _amount, _token);
 
         lastDistributionIndex = ++lastDistributionIndex;
 
         distributions[lastDistributionIndex] = d;
 
-        WKCS.transferFrom(_msgSender(), address(this), _amount);
+        IERC20Ext(_token).transferFrom(_msgSender(), address(this), _amount);
     }
 
     function _updateShares(address _user) internal {
@@ -186,7 +189,9 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
                         claimedAmount = WKCS.balanceOf(address(this));
                     }
 
-                    WKCS.transfer(_msgSender(), claimedAmount);
+                    Distribution memory d = distributions[i];
+
+                    IERC20Ext(d.token).transfer(_msgSender(), claimedAmount);
 
                     claimed[_user][i] = true;
                 }
