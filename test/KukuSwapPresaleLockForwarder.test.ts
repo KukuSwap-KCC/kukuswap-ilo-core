@@ -81,7 +81,7 @@ describe("KukuSwapPresaleLockForwarder", function () {
 
         this.generator = (await ethers.getSigners())[1];
 
-        this.presaleOwner = (await ethers.getSigners())[2]
+        this.presaleOwner = (await ethers.getSigners())[2];
     });
 
     it("should lock liqiduity from presale for existing pair", async function () {

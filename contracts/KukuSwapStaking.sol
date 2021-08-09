@@ -5,6 +5,7 @@ pragma solidity 0.6.12;
 import "./interfaces/IERC20Ext.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "hardhat/console.sol";
 
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
 contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
@@ -31,6 +32,10 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
 
     mapping(address => bool) public authorized;
 
+    uint256 public totalStakingKuku;
+
+    bool public isKukuBalanceInit;
+
     /// @notice Define the KUKU and WKCS token contract
     function initialize(IERC20Ext _KUKU, IERC20Ext _WKCS) public initializer {
         KUKU = _KUKU;
@@ -38,6 +43,13 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
 
         ERC20Upgradeable.__ERC20_init("KukuSwap Staking Token", "KUKU Shares");
         OwnableUpgradeable.__Ownable_init();
+    }
+
+    function initKukuBalance() public {
+        if (!isKukuBalanceInit) {
+            totalStakingKuku = IERC20Ext(KUKU).balanceOf(address(this));
+            isKukuBalanceInit = true;
+        }
     }
 
     //await
@@ -55,12 +67,18 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     // Locks KUKU and mints KUKU ST
     function enter(uint256 _amount) external {
         // Gets the amount of KUKU locked in the contract
-        uint256 totalKUKU = KUKU.balanceOf(address(this));
+        uint256 totalKUKU = totalStakingKuku;
+
+        if (!isKukuBalanceInit) {
+            totalKUKU = KUKU.balanceOf(address(this));
+        }
+
         // Gets the amount of KUKU ST in existence
         uint256 totalShares = totalSupply();
         // If no KUKU ST exists, mint it 1:1 to the amount put in
 
         uint256 what = _amount;
+
         if (totalShares != 0 || totalKUKU != 0) {
             what = _amount.mul(totalShares).div(totalKUKU);
         }
@@ -69,6 +87,11 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
 
         // Lock the KUKU in the contract
         KUKU.transferFrom(_msgSender(), address(this), _amount);
+
+        //small hack for ugrade version
+        if (isKukuBalanceInit) {
+            totalStakingKuku = totalStakingKuku.add(_amount);
+        }
 
         _updateShares(_msgSender());
     }
@@ -81,18 +104,28 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
         // Gets the amount of KUKU ST in existence
         uint256 totalShares = totalSupply();
 
+        uint256 totalKUKU = totalStakingKuku;
+
+        if (!isKukuBalanceInit) {
+            totalKUKU = KUKU.balanceOf(address(this));
+        }
+
         // Calculates the amount of KUKU the KUKU ST is worth
-        uint256 what = _share.mul(KUKU.balanceOf(address(this))).div(totalShares);
+        uint256 what = _share.mul(totalKUKU).div(totalShares);
 
         _burn(_msgSender(), _share);
 
         //transfer KUKU
 
-        if (what >= KUKU.balanceOf(address(this))) {
-            what = KUKU.balanceOf(address(this));
+        if (what >= totalKUKU) {
+            what = totalKUKU;
         }
 
         KUKU.transfer(_msgSender(), what);
+
+        if (isKukuBalanceInit) {
+            totalStakingKuku = totalStakingKuku.sub(what);
+        }
 
         _updateShares(_msgSender());
     }
@@ -145,7 +178,7 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     /// @notice get staking amount
     function getStakingAmount(address _user) external view returns (uint256 amount) {
         // Calculates the amount of KUKU the KUKU ST is worth
-        amount = balanceOf(_user).mul(KUKU.balanceOf(address(this))).div(totalSupply());
+        amount = balanceOf(_user).mul(totalStakingKuku).div(totalSupply());
     }
 
     /**
@@ -184,14 +217,15 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
             for (uint256 i = 1; i <= lastDistributionIndex; i++) {
                 if (!claimed[_user][i]) {
                     claimedAmount = _getRewardAmount(i, _user);
-
-                    if (claimedAmount >= WKCS.balanceOf(address(this))) {
-                        claimedAmount = WKCS.balanceOf(address(this));
-                    }
-
                     Distribution memory d = distributions[i];
 
-                    IERC20Ext(d.token).transfer(_msgSender(), claimedAmount);
+                    if (claimedAmount >= IERC20Ext(d.token).balanceOf(address(this))) {
+                        claimedAmount = IERC20Ext(d.token).balanceOf(address(this));
+                    }
+
+                    if (claimedAmount > 0) {
+                        IERC20Ext(d.token).transfer(_msgSender(), claimedAmount);
+                    }
 
                     claimed[_user][i] = true;
                 }

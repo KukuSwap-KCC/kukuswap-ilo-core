@@ -298,7 +298,6 @@ describe("KukuSwapPresale User Operation - Success Presale", function () {
         //presale Owner
         expect(await this.presaleOwner.getBalance()).to.be.gt(ownerBalanceBefore);
 
-
         //investor 1
         await presale.connect(this.investor).userWithdrawTokens();
         expect(await this.bnb.balanceOf(this.investor.address)).to.be.equal(
@@ -1130,7 +1129,9 @@ describe("KukuSwapPresale Simple Operation with KUKU as Base Token", function ()
 
         await presale.connect(this.presaleOwner).addLiquidity();
 
-        expect(await this.kuku.balanceOf(this.presaleOwner.address)).to.be.gt(ownerBalanceBefore)
+        expect(await this.kuku.balanceOf(this.presaleOwner.address)).to.be.gt(
+            ownerBalanceBefore
+        );
 
         const kukuBalanceBefore = await this.bnb.balanceOf(this.kukuHolder.address);
 

@@ -57,7 +57,9 @@ describe("KukuSwapPresaleFactory", function () {
 
     it("should not register presale from regular user", async function () {
         await expect(
-            this.factory.connect(this.presale).registerPresale(this.presale.address, this.presaleOwner.address)
+            this.factory
+                .connect(this.presale)
+                .registerPresale(this.presale.address, this.presaleOwner.address)
         ).to.be.revertedWith("FORBIDDEN");
     });
 });
