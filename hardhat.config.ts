@@ -50,6 +50,10 @@ const config: HardhatUserConfig = {
     alphaSort: true,
     runOnCompile: true,
     disambiguatePaths: false,
+  },
+  typechain: {
+    outDir: "src/types",
+    target: "ethers-v5",
   }
 }
 

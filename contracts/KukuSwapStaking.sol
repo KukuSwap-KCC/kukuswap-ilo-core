@@ -5,7 +5,6 @@ pragma solidity 0.6.12;
 import "./interfaces/IERC20Ext.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "hardhat/console.sol";
 
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
 contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
