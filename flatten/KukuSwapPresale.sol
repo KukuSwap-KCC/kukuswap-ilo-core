@@ -157,6 +157,17 @@ interface IWKCS {
 }
 
 
+// Dependency file: contracts/interfaces/IKukuSwapStaking.sol
+
+// pragma solidity 0.6.12;
+
+interface IKukuSwapStaking {
+    function authorize(address _user, bool isAuth) external;
+
+    function createDistribution(uint256 _amount, address _token) external;
+}
+
+
 // Dependency file: contracts/helpers/TransferHelper.sol
 
 
@@ -803,6 +814,7 @@ pragma solidity 0.6.12;
 // import "contracts/interfaces/IKukuSwapPresaleSettings.sol";
 // import "contracts/interfaces/IWKCS.sol";
 // import "contracts/interfaces/IERC20Ext.sol";
+// import "contracts/interfaces/IKukuSwapStaking.sol";
 // import "contracts/helpers/TransferHelper.sol";
 // import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 // import "@openzeppelin/contracts/utils/EnumerableSet.sol";
@@ -831,14 +843,13 @@ contract KukuSwapPresale is ReentrancyGuard {
         uint256 LISTING_RATE; // fixed rate at which the token will list on kukuswap
         uint256 START_BLOCK;
         uint256 END_BLOCK;
-        uint256 LOCK_PERIOD; // unix timestamp -> e.g. 2 weeks
+        uint256 LOCK_PERIOD; // blocks -> e.g, for example 2 weeks, 1 block per 3 sec, 2 weeks = 403.200
         bool PRESALE_IN_KCS; // if this flag is true the presale is raising KCS, otherwise an ERC20 token such as DAI
     }
 
     struct PresaleFeeInfo {
         uint256 KUKU_BASE_FEE; // divided by 1000
         address payable BASE_FEE_ADDRESS;
-        address payable TOKEN_FEE_ADDRESS;
     }
 
     struct PresaleStatus {
@@ -870,13 +881,20 @@ contract KukuSwapPresale is ReentrancyGuard {
     mapping(address => BuyerInfo) public BUYERS;
     EnumerableSet.AddressSet private WHITELIST;
 
-    constructor(address _presaleGenerator) public {
+    constructor(
+        address _presaleGenerator,
+        address _factory,
+        address _wkcs,
+        address _settings,
+        address _lockForwarder,
+        address _devAddress
+    ) public {
         PRESALE_GENERATOR = _presaleGenerator;
-        KUKU_FACTORY = IKukuSwapFactory(address(0x0));
-        WKCS = IWKCS(address(0x0));
-        PRESALE_SETTINGS = IKukuSwapPresaleSettings(address(0x0));
-        PRESALE_LOCK_FORWARDER = IKukuSwapPresaleLockForwarder(address(0x0));
-        DEV_ADDRESS = address(0x0);
+        KUKU_FACTORY = IKukuSwapFactory(_factory);
+        WKCS = IWKCS(_wkcs);
+        PRESALE_SETTINGS = IKukuSwapPresaleSettings(_settings);
+        PRESALE_LOCK_FORWARDER = IKukuSwapPresaleLockForwarder(_lockForwarder);
+        DEV_ADDRESS = address(_devAddress);
     }
 
     function init1(
@@ -913,7 +931,7 @@ contract KukuSwapPresale is ReentrancyGuard {
         address payable _baseFeeAddress
     ) external {
         require(msg.sender == PRESALE_GENERATOR, "FORBIDDEN");
-        // require(!PRESALE_LOCK_FORWARDER.kukuswapPairIsInitialised(address(_presaleToken), address(_baseToken)), 'PAIR INITIALISED');
+        require(!PRESALE_LOCK_FORWARDER.kukuswapPairIsInitialised(address(_presaleToken), address(_baseToken)), "PAIR INITIALISED");
 
         PRESALE_INFO.PRESALE_IN_KCS = address(_baseToken) == address(WKCS);
         PRESALE_INFO.S_TOKEN = _presaleToken;
@@ -1062,8 +1080,9 @@ contract KukuSwapPresale is ReentrancyGuard {
         // base token liquidity
         uint256 baseLiquidity = STATUS.TOTAL_BASE_COLLECTED.sub(kukuBaseFee).mul(PRESALE_INFO.LIQUIDITY_PERCENT).div(1000);
         if (PRESALE_INFO.PRESALE_IN_KCS) {
-            WKCS.deposit{value: baseLiquidity}();
+            WKCS.deposit{value: baseLiquidity.add(kukuBaseFee)}();
         }
+
         TransferHelper.safeApprove(address(PRESALE_INFO.B_TOKEN), address(PRESALE_LOCK_FORWARDER), baseLiquidity);
 
         // sale token liquidity
@@ -1075,16 +1094,13 @@ contract KukuSwapPresale is ReentrancyGuard {
             PRESALE_INFO.S_TOKEN,
             baseLiquidity,
             tokenLiquidity,
-            block.timestamp + PRESALE_INFO.LOCK_PERIOD,
+            block.number + PRESALE_INFO.LOCK_PERIOD,
             PRESALE_INFO.PRESALE_OWNER
         );
 
-        TransferHelper.safeTransferBaseToken(
-            address(PRESALE_INFO.B_TOKEN),
-            PRESALE_FEE_INFO.BASE_FEE_ADDRESS,
-            kukuBaseFee,
-            !PRESALE_INFO.PRESALE_IN_KCS
-        );
+        TransferHelper.safeApprove(address(PRESALE_INFO.B_TOKEN), address(PRESALE_FEE_INFO.BASE_FEE_ADDRESS), kukuBaseFee);
+
+        IKukuSwapStaking(PRESALE_FEE_INFO.BASE_FEE_ADDRESS).createDistribution(kukuBaseFee, address(PRESALE_INFO.B_TOKEN));
 
         // burn unsold tokens
         uint256 remainingSBalance = PRESALE_INFO.S_TOKEN.balanceOf(address(this));
@@ -1112,7 +1128,7 @@ contract KukuSwapPresale is ReentrancyGuard {
     // postpone or bring a presale forward, this will only work when a presale is inactive.
     // i.e. current start block > block.number
     function updateBlocks(uint256 _startBlock, uint256 _endBlock) external onlyPresaleOwner {
-        require(PRESALE_INFO.START_BLOCK > block.number);
+        require(PRESALE_INFO.START_BLOCK > block.number, "PRESALE IS ACTIVE");
         require(_endBlock.sub(_startBlock) <= PRESALE_SETTINGS.getMaxPresaleLength());
         PRESALE_INFO.START_BLOCK = _startBlock;
         PRESALE_INFO.END_BLOCK = _endBlock;

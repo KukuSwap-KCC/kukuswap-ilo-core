@@ -78,6 +78,9 @@ describe("KukuSwapStakingMigration", function () {
     });
 
     it("should correct balance of share", async function () {
+
+        expect(await this.staking.KUKU()).to.be.equal(this.kuku.address);
+
         expect(await this.staking.totalSupply()).to.be.equal(
             await this.kuku.balanceOf(this.staking.address)
         );
@@ -93,6 +96,7 @@ describe("KukuSwapStakingMigration", function () {
         expect(await this.staking.KUKU()).to.be.equal(this.kuku.address);
 
         expect(await this.staking.WKCS()).to.be.equal(this.wkcs.address);
+        
     });
 
     it("should create distribution from minter", async function () {

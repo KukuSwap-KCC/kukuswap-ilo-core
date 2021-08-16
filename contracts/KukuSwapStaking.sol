@@ -6,6 +6,7 @@ import "./interfaces/IERC20Ext.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
+
 // This contract handles swapping to and from KUKU ST, kukuswap's staking token.
 contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     IERC20Ext public KUKU;
@@ -65,6 +66,9 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     /// @notice Enter the Staking. Pay some KUKUs. Earn some shares.
     // Locks KUKU and mints KUKU ST
     function enter(uint256 _amount) external {
+
+        require(_amount > 0, "enter: zero amount");
+
         // Gets the amount of KUKU locked in the contract
         uint256 totalKUKU = totalStakingKuku;
 
@@ -98,6 +102,7 @@ contract KukuSwapStaking is ERC20Upgradeable, OwnableUpgradeable {
     /// @notice  Leave the staking. Claim back your KUKUs.
     // Unlocks the staked + gained KUKU and burns KUKU ST
     function leave(uint256 _share) external {
+        require(_share > 0, "leave: zero amount");
         //Distribute Rewards
         _claim(_msgSender());
         // Gets the amount of KUKU ST in existence

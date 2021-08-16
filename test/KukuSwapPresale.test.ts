@@ -1,6 +1,7 @@
 import { ethers, network, waffle } from "hardhat";
 import { expect } from "chai";
 
+
 describe("KukuSwapPresale User Operation - Success Presale", function () {
     const userAddress = ethers.utils.getAddress(
         "0x9280E3Eb147027FC04d4805f21D629eBCf305493"
@@ -248,6 +249,10 @@ describe("KukuSwapPresale User Operation - Success Presale", function () {
         expect(await this.investor.getBalance()).to.be.equal(
             userBalance1.sub(ethers.utils.parseEther("0.01"))
         );
+
+        //await presale
+        //    .connect(this.investor)
+        //    .userDeposit(0, { value: ethers.utils.parseEther("0.01") });
 
         //investor 2
         const userBalance2 = await this.investor2.getBalance();
@@ -576,6 +581,10 @@ describe("KukuSwapPresale Manage Operation", function () {
         const userBalanceBefore = await this.investor2.getBalance();
 
         await presale.connect(this.investor2).userWithdrawBaseTokens();
+
+        expect(await this.investor2.getBalance()).to.be.equal(
+            userBalanceBefore.add(ethers.utils.parseEther("6.01"))
+        );
 
         expect(await this.investor2.getBalance()).to.be.equal(
             userBalanceBefore.add(ethers.utils.parseEther("6.01"))
