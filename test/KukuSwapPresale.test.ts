@@ -2,6 +2,8 @@ import { ethers, network, waffle } from "hardhat";
 import { expect } from "chai";
 
 
+
+/*
 describe("KukuSwapPresale User Operation - Success Presale", function () {
     const userAddress = ethers.utils.getAddress(
         "0x9280E3Eb147027FC04d4805f21D629eBCf305493"
@@ -1455,5 +1457,348 @@ describe("KukuSwapPresale Failed Presale with KUKU as Base Token ", function () 
         expect(await this.bnb.balanceOf(this.presaleOwner.address)).to.be.gte(
             ownerBalanceBefore
         );
+    });
+});
+
+*/
+
+describe("KukuSwapPresale User Operation - Lock Tokens Later", function () {
+    const userAddress = ethers.utils.getAddress(
+        "0x9280E3Eb147027FC04d4805f21D629eBCf305493"
+    );
+
+    const kukuFactory = ethers.utils.getAddress(
+        "0x852ead547a013cc1e35ee41454af7a8d75a7b49d"
+    );
+
+    const wkcsToken = ethers.utils.getAddress(
+        "0x4446fc4eb47f2f6586f9faab68b3498f86c07521"
+    );
+
+    const kukuToken = ethers.utils.getAddress(
+        "0x509195a9d762bc6f3282c874156bd2e45de86a10"
+    );
+
+    const bnbToken = ethers.utils.getAddress(
+        "0x639a647fbe20b6c8ac19e48e2de44ea792c62c5c"
+    );
+
+    const holderBNB = ethers.utils.getAddress(
+        "0x4db6719dba90224b2ff1ce2b4ae442ac9c374db8"
+    );
+
+    before(async function () {
+        await network.provider.request({
+            method: "hardhat_reset",
+            params: [
+                {
+                    forking: {
+                        jsonRpcUrl: "https://rpc-mainnet.kcc.network",
+                    },
+                },
+            ],
+        });
+
+        await network.provider.request({
+            method: "hardhat_impersonateAccount",
+            params: [userAddress],
+        });
+
+        await network.provider.request({
+            method: "hardhat_impersonateAccount",
+            params: [holderBNB],
+        });
+
+        this.wkcs = await ethers.getContractAt("IERC20Ext", wkcsToken);
+
+        this.kuku = await ethers.getContractAt("IERC20Ext", kukuToken);
+
+        this.bnb = await ethers.getContractAt("IERC20Ext", bnbToken);
+
+        this.Forwarder = await ethers.getContractFactory(
+            "KukuSwapPresaleLockForwarder"
+        );
+
+        this.Factory = await ethers.getContractFactory("KukuSwapPresaleFactory");
+
+        this.Locker = await ethers.getContractFactory("KukuSwapLocker");
+
+        this.Settings = await ethers.getContractFactory("KukuSwapPresaleSettings");
+
+        this.Staking = await ethers.getContractFactory("KukuSwapStaking");
+
+        this.Generator = await ethers.getContractFactory("KukuSwapPresaleGenerator");
+
+        // locker
+        this.locker = await this.Locker.deploy();
+        await this.locker.initialize(kukuFactory);
+
+        //factory
+        this.factory = await this.Factory.deploy();
+        await this.factory.initialize();
+
+        //forwarder
+        this.forwarder = await this.Forwarder.deploy();
+        await this.forwarder.initialize(
+            this.factory.address,
+            this.locker.address,
+            kukuFactory
+        );
+
+        //staking
+        this.staking = await this.Staking.deploy();
+        await this.staking.initialize(this.kuku.address, this.wkcs.address);
+
+        //settings
+        this.settings = await this.Settings.deploy();
+        await this.settings.initialize(this.staking.address);
+
+        //dev
+        this.dev = (await ethers.getSigners())[1];
+
+        //generator
+        this.generator = await this.Generator.deploy();
+        await this.generator.initialize(
+            this.factory.address,
+            this.wkcs.address,
+            this.settings.address,
+            this.forwarder.address,
+            this.dev.address
+        );
+
+        //presale owner
+        this.presaleOwner = await ethers.getSigner(userAddress);
+
+        this.bnbHolder = await ethers.getSigner(holderBNB);
+
+        await this.bnb
+            .connect(this.bnbHolder)
+            .transfer(this.presaleOwner.address, ethers.utils.parseEther("500"));
+
+        this.investor = (await ethers.getSigners())[1];
+
+        this.investor2 = (await ethers.getSigners())[2];
+
+        //allow operations to generator
+        await this.factory.adminAllowPresaleGenerator(this.generator.address, true);
+
+        await this.staking.authorize(this.generator.address, true);
+
+        await this.locker.whitelistFeeAccount(this.forwarder.address, true);
+    });
+
+    it("should have correct default settings", async function () {
+        const settings = await this.settings.SETTINGS();
+
+        //base fee
+        expect(settings.BASE_FEE).to.be.equal(50);
+        expect(settings.STAKING_ADDRESS).to.be.equal(this.staking.address);
+        expect(settings.ROUND1_LENGTH).to.be.equal(1200);
+        expect(settings.MAX_PRESALE_LENGTH).to.be.equal(93046);
+
+        expect(await this.settings.getStakingAddress()).to.be.equal(
+            this.staking.address
+        );
+        expect(await this.settings.getBaseFee()).to.be.equal(50);
+        expect(await this.settings.getRound1Length()).to.be.equal(1200);
+        expect(await this.settings.getMaxPresaleLength()).to.be.equal(93046);
+    });
+
+    it("should create presale contract", async function () {
+        await this.bnb
+            .connect(this.presaleOwner)
+            .approve(this.generator.address, ethers.utils.parseEther("1000"));
+
+        const startBlock = (await ethers.provider.getBlockNumber()) + 10;
+        const endBlock = (await ethers.provider.getBlockNumber()) + 100;
+
+        await this.generator
+            .connect(this.presaleOwner)
+            .createPresale(
+                this.presaleOwner.address,
+                this.bnb.address,
+                this.wkcs.address,
+                [
+                    ethers.utils.parseEther("100"), //amount
+                    ethers.utils.parseEther("100"), // 1 KCS = 100
+                    ethers.utils.parseEther("0.01"), //maxSpendPerBuyer
+                    ethers.utils.parseEther("0.02"), //hard cap
+                    ethers.utils.parseEther("0.01"), //soft cap
+                    600, //liquidity percent 60
+                    ethers.utils.parseEther("100"), //listing rate
+                    startBlock, //start block
+                    endBlock, //end block
+                    1200, //lock period
+                ],
+                false
+            );
+        
+       
+        expect(
+            await this.factory.presalesLengthByUser(this.presaleOwner.address)
+        ).to.be.equal(1);
+
+        const presaleIndex =
+            (await this.factory.presalesLengthByUser(this.presaleOwner.address)) - 1;
+
+        const newPresale = await this.factory.presaleAtIndexByUser(
+            this.presaleOwner.address,
+            presaleIndex
+        );
+
+        const presale = await ethers.getContractAt("KukuSwapPresale", newPresale);
+
+
+        const tokenAmount = await this.generator.tokensRequiredForPresale(
+            ethers.utils.parseEther("100"), 
+            ethers.utils.parseEther("100"), 
+            ethers.utils.parseEther("100"), 
+            600)
+        
+        await this.bnb.connect(this.presaleOwner).transfer(presale.address, tokenAmount)
+        
+        const presaleInfo = await presale.PRESALE_INFO();
+
+        expect(presaleInfo.PRESALE_OWNER).to.be.equal(this.presaleOwner.address);
+        expect(presaleInfo.S_TOKEN).to.be.equal(this.bnb.address);
+        expect(presaleInfo.B_TOKEN).to.be.equal(this.wkcs.address);
+        expect(presaleInfo.TOKEN_PRICE).to.be.equal(ethers.utils.parseEther("100"));
+        expect(presaleInfo.MAX_SPEND_PER_BUYER).to.be.equal(
+            ethers.utils.parseEther("0.01")
+        );
+        expect(presaleInfo.AMOUNT).to.be.equal(ethers.utils.parseEther("100"));
+        expect(presaleInfo.HARDCAP).to.be.equal(ethers.utils.parseEther("0.02"));
+        expect(presaleInfo.SOFTCAP).to.be.equal(ethers.utils.parseEther("0.01"));
+        expect(presaleInfo.LIQUIDITY_PERCENT).to.be.equal(600);
+        expect(presaleInfo.LISTING_RATE).to.be.equal(ethers.utils.parseEther("100"));
+        expect(presaleInfo.START_BLOCK).to.be.equal(startBlock);
+        expect(presaleInfo.END_BLOCK).to.be.equal(endBlock);
+        expect(presaleInfo.LOCK_PERIOD).to.be.equal(806400);
+        expect(presaleInfo.PRESALE_IN_KCS).to.be.equal(true);
+    });
+
+    it("should be open for deposit after start", async function () {
+        expect(
+            await this.factory.presalesLengthByUser(this.presaleOwner.address)
+        ).to.be.equal(1);
+
+        const presaleIndex =
+            (await this.factory.presalesLengthByUser(this.presaleOwner.address)) - 1;
+
+        const newPresale = await this.factory.presaleAtIndexByUser(
+            this.presaleOwner.address,
+            presaleIndex
+        );
+
+        const presale = await ethers.getContractAt("KukuSwapPresale", newPresale);
+
+        await expect(
+            presale
+                .connect(this.investor)
+                .userDeposit(0, { value: ethers.utils.parseEther("0.01") })
+        ).to.be.revertedWith("NOT ACTIVE");
+
+        for (let i = 0; i < 10; i++) {
+            await network.provider.request({
+                method: "evm_mine",
+                params: [],
+            });
+        }
+
+        //investor 1
+        const userBalance1 = await this.investor.getBalance();
+        await presale
+            .connect(this.investor)
+            .userDeposit(0, { value: ethers.utils.parseEther("0.01") });
+
+        let status = await presale.STATUS();
+
+        expect(status.TOTAL_BASE_COLLECTED).to.be.equal(
+            ethers.utils.parseEther("0.01")
+        );
+        expect(status.TOTAL_TOKENS_SOLD).to.be.equal(ethers.utils.parseEther("1"));
+        expect(await this.investor.getBalance()).to.be.equal(
+            userBalance1.sub(ethers.utils.parseEther("0.01"))
+        );
+
+        //await presale
+        //    .connect(this.investor)
+        //    .userDeposit(0, { value: ethers.utils.parseEther("0.01") });
+
+        //investor 2
+        const userBalance2 = await this.investor2.getBalance();
+        await presale
+            .connect(this.investor2)
+            .userDeposit(0, { value: ethers.utils.parseEther("1") });
+
+        status = await presale.STATUS();
+
+        expect(status.TOTAL_BASE_COLLECTED).to.be.equal(
+            ethers.utils.parseEther("0.02")
+        );
+        expect(status.TOTAL_TOKENS_SOLD).to.be.equal(ethers.utils.parseEther("2"));
+        expect(await this.investor2.getBalance()).to.be.equal(
+            userBalance2.sub(ethers.utils.parseEther("0.01"))
+        );
+    });
+
+    it("should be open for withdaraw tokens after end", async function () {
+        expect(
+            await this.factory.presalesLengthByUser(this.presaleOwner.address)
+        ).to.be.equal(1);
+
+        const presaleIndex =
+            (await this.factory.presalesLengthByUser(this.presaleOwner.address)) - 1;
+
+        const newPresale = await this.factory.presaleAtIndexByUser(
+            this.presaleOwner.address,
+            presaleIndex
+        );
+
+        const presale = await ethers.getContractAt("KukuSwapPresale", newPresale);
+
+        await expect(
+            presale.connect(this.investor).userWithdrawTokens()
+        ).to.be.revertedWith("AWAITING LP GENERATION");
+
+        for (let i = 0; i < 100; i++) {
+            await network.provider.request({
+                method: "evm_mine",
+                params: [],
+            });
+        }
+
+        const ownerBalanceBefore = await this.presaleOwner.getBalance();
+        await presale.connect(this.presaleOwner).addLiquidity();
+
+        //presale Owner
+        expect(await this.presaleOwner.getBalance()).to.be.gt(ownerBalanceBefore);
+
+        //investor 1
+        await presale.connect(this.investor).userWithdrawTokens();
+        expect(await this.bnb.balanceOf(this.investor.address)).to.be.equal(
+            ethers.utils.parseEther("1")
+        );
+
+        //investor 2
+        await presale.connect(this.investor2).userWithdrawTokens();
+        expect(await this.bnb.balanceOf(this.investor2.address)).to.be.equal(
+            ethers.utils.parseEther("1")
+        );
+
+        expect(
+            await this.locker.getUserNumLockedTokens(this.presaleOwner.address)
+        ).to.be.equal("1");
+
+        //staking contract distribution
+
+        expect(await this.wkcs.balanceOf(this.staking.address)).to.be.gt(0);
+
+        let lastDistributionIndex = await this.staking.lastDistributionIndex();
+        expect(lastDistributionIndex).to.equal("1");
+
+        let distribution = await this.staking.distributions(lastDistributionIndex);
+        expect(distribution.amount).to.gt(0)
+        expect(distribution.token).to.equal(this.wkcs.address);
     });
 });
