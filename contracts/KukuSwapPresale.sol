@@ -245,12 +245,12 @@ contract KukuSwapPresale is ReentrancyGuard {
 
     // if something goes wrong in LP generation
     function forceFail() external {
-        require(DEV_ADDRESS == DEV_ADDRESS, "Is not DEV ADDRESS");
+        require(DEV_ADDRESS == msg.sender, "Is not DEV ADDRESS");
         STATUS.FORCE_FAILED = true;
     }
 
     function setDevAddress(address newDevAddress) external {
-        require(DEV_ADDRESS == DEV_ADDRESS, "Is not DEV ADDRESS");
+        require(DEV_ADDRESS == msg.sender, "Is not DEV ADDRESS");
         DEV_ADDRESS = newDevAddress;
     }
 

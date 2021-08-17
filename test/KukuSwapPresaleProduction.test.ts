@@ -166,7 +166,8 @@ describe("KukuSwapPresale User Operation - Success Presale", function () {
                     startBlock, //start block
                     endBlock, //end block
                     1200, //lock period
-                ]
+                ],
+                true
             );
 
         expect(

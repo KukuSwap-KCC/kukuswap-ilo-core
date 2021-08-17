@@ -2,8 +2,6 @@ import { ethers, network, waffle } from "hardhat";
 import { expect } from "chai";
 
 
-
-
 describe("KukuSwapPresale User Operation - Success Presale", function () {
     const userAddress = ethers.utils.getAddress(
         "0x9280E3Eb147027FC04d4805f21D629eBCf305493"
@@ -274,7 +272,7 @@ describe("KukuSwapPresale User Operation - Success Presale", function () {
         );
     });
 
-    it("should be open for withdaraw tokens after end", async function () {
+    it("should be open for withdraw tokens after end", async function () {
         expect(
             await this.factory.presalesLengthByUser(this.presaleOwner.address)
         ).to.be.equal(1);
@@ -2026,12 +2024,33 @@ describe("KukuSwapPresale User Operation - Force Fail", function () {
             presaleIndex
         );
 
+        for (let i = 0; i < 50; i++) {
+            await network.provider.request({
+                method: "evm_mine",
+                params: [],
+            });
+        }
+
         const presale = await ethers.getContractAt("KukuSwapPresale", newPresale);
+        
+        await expect(presale.connect(this.presaleOwner).forceFail()).to.be.revertedWith("Is not DEV ADDRESS")
+        
+        const investorBalanceBefore = await this.investor.getBalance()
+
+        await presale
+        .connect(this.investor)
+        .userDeposit(0, { value: ethers.utils.parseEther("6") })
+
+        expect(await this.investor.getBalance()).to.be.equal(investorBalanceBefore.sub(ethers.utils.parseEther("0.01")))
 
         await presale.connect(this.dev).forceFail()
 
         expect(await presale.presaleStatus()).to.be.equal(3);
         
+        await presale.connect(this.investor).userWithdrawBaseTokens();
+
+        expect(await this.investor.getBalance()).to.be.equal(investorBalanceBefore)
+
         const balanceOwnerBefore = await this.bnb.balanceOf(this.presaleOwner.address)
 
         await presale.connect(this.presaleOwner).ownerWithdrawTokens()
