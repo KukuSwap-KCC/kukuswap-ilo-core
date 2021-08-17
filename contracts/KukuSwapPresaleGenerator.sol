@@ -60,7 +60,8 @@ contract KukuSwapPresaleGenerator is OwnableUpgradeable {
         address payable _presaleOwner,
         IERC20Ext _presaleToken,
         IERC20Ext _baseToken,
-        uint256[10] memory uint_params
+        uint256[10] memory uint_params,
+        bool lockTokens
     ) public payable returns (KukuSwapPresale newPresale) {
         PresaleParams memory params;
         params.amount = uint_params[0];
@@ -83,13 +84,6 @@ contract KukuSwapPresaleGenerator is OwnableUpgradeable {
         require(params.tokenPrice.mul(params.hardcap) > 0, "INVALID PARAMS"); // ensure no overflow for future calculations
         require(params.liquidityPercent >= 300 && params.liquidityPercent <= 1000, "MIN LIQUIDITY"); // 30% minimum liquidity lock
 
-        uint256 tokensRequiredForPresale = tokensRequiredForPresale(
-            params.amount,
-            params.tokenPrice,
-            params.listingRate,
-            params.liquidityPercent
-        );
-
         newPresale = new KukuSwapPresale(
             address(this),
             address(PRESALE_FACTORY),
@@ -99,7 +93,17 @@ contract KukuSwapPresaleGenerator is OwnableUpgradeable {
             DEV_ADDRESS
         );
 
-        TransferHelper.safeTransferFrom(address(_presaleToken), address(msg.sender), address(newPresale), tokensRequiredForPresale);
+        if (lockTokens) {
+            uint256 tokensRequiredForPresale = tokensRequiredForPresale(
+                params.amount,
+                params.tokenPrice,
+                params.listingRate,
+                params.liquidityPercent
+            );
+
+            TransferHelper.safeTransferFrom(address(_presaleToken), address(msg.sender), address(newPresale), tokensRequiredForPresale);
+        }
+
         newPresale.init1(
             _presaleOwner,
             params.amount,

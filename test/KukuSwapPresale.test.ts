@@ -169,7 +169,8 @@ describe("KukuSwapPresale User Operation - Success Presale", function () {
                     startBlock, //start block
                     endBlock, //end block
                     1200, //lock period
-                ]
+                ],
+                true
             );
 
         expect(
@@ -482,7 +483,8 @@ describe("KukuSwapPresale Manage Operation", function () {
                     startBlock, //start block
                     endBlock, //end block
                     1200, //lock period
-                ]
+                ],
+                true
             );
 
         expect(
@@ -770,7 +772,8 @@ describe("KukuSwapPresale Simple Operation - Round 1 with Early Access Tokens", 
                     startBlock, //start block
                     endBlock, //end block
                     1200, //lock period
-                ]
+                ],
+                true
             );
 
         expect(
@@ -1034,7 +1037,8 @@ describe("KukuSwapPresale Simple Operation with KUKU as Base Token", function ()
                     startBlock, //start block
                     endBlock, //end block
                     1200, //lock period
-                ]
+                ],
+                true
             );
 
         expect(
@@ -1342,7 +1346,8 @@ describe("KukuSwapPresale Failed Presale with KUKU as Base Token ", function () 
                     startBlock, //start block
                     endBlock, //end block
                     1200, //lock period
-                ]
+                ], 
+                true
             );
 
         expect(

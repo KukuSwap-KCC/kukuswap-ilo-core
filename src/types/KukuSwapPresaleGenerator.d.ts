@@ -25,7 +25,7 @@ interface KukuSwapPresaleGeneratorInterface extends ethers.utils.Interface {
   functions: {
     "PRESALE_FACTORY()": FunctionFragment;
     "PRESALE_SETTINGS()": FunctionFragment;
-    "createPresale(address,address,address,uint256[10])": FunctionFragment;
+    "createPresale(address,address,address,uint256[10],bool)": FunctionFragment;
     "initialize(address,address,address,address,address)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -58,7 +58,8 @@ interface KukuSwapPresaleGeneratorInterface extends ethers.utils.Interface {
         BigNumberish,
         BigNumberish,
         BigNumberish
-      ]
+      ],
+      boolean
     ]
   ): string;
   encodeFunctionData(
@@ -151,10 +152,11 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish,
         BigNumberish
       ],
+      lockTokens: boolean,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
-    "createPresale(address,address,address,uint256[10])"(
+    "createPresale(address,address,address,uint256[10],bool)"(
       _presaleOwner: string,
       _presaleToken: string,
       _baseToken: string,
@@ -170,6 +172,7 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish,
         BigNumberish
       ],
+      lockTokens: boolean,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
@@ -250,10 +253,11 @@ export class KukuSwapPresaleGenerator extends Contract {
       BigNumberish,
       BigNumberish
     ],
+    lockTokens: boolean,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
-  "createPresale(address,address,address,uint256[10])"(
+  "createPresale(address,address,address,uint256[10],bool)"(
     _presaleOwner: string,
     _presaleToken: string,
     _baseToken: string,
@@ -269,6 +273,7 @@ export class KukuSwapPresaleGenerator extends Contract {
       BigNumberish,
       BigNumberish
     ],
+    lockTokens: boolean,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
@@ -349,10 +354,11 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish,
         BigNumberish
       ],
+      lockTokens: boolean,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "createPresale(address,address,address,uint256[10])"(
+    "createPresale(address,address,address,uint256[10],bool)"(
       _presaleOwner: string,
       _presaleToken: string,
       _baseToken: string,
@@ -368,6 +374,7 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish,
         BigNumberish
       ],
+      lockTokens: boolean,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -456,10 +463,11 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish,
         BigNumberish
       ],
+      lockTokens: boolean,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
-    "createPresale(address,address,address,uint256[10])"(
+    "createPresale(address,address,address,uint256[10],bool)"(
       _presaleOwner: string,
       _presaleToken: string,
       _baseToken: string,
@@ -475,6 +483,7 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish,
         BigNumberish
       ],
+      lockTokens: boolean,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
@@ -560,10 +569,11 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish,
         BigNumberish
       ],
+      lockTokens: boolean,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
-    "createPresale(address,address,address,uint256[10])"(
+    "createPresale(address,address,address,uint256[10],bool)"(
       _presaleOwner: string,
       _presaleToken: string,
       _baseToken: string,
@@ -579,6 +589,7 @@ export class KukuSwapPresaleGenerator extends Contract {
         BigNumberish,
         BigNumberish
       ],
+      lockTokens: boolean,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 

@@ -245,12 +245,12 @@ contract KukuSwapPresale is ReentrancyGuard {
 
     // if something goes wrong in LP generation
     function forceFail() external {
-        require(DEV_ADDRESS == address(0x0), "Is not DEV ADDRESS");
+        require(DEV_ADDRESS == DEV_ADDRESS, "Is not DEV ADDRESS");
         STATUS.FORCE_FAILED = true;
     }
 
     function setDevAddress(address newDevAddress) external {
-        require(DEV_ADDRESS == address(0x0), "Is not DEV ADDRESS");
+        require(DEV_ADDRESS == DEV_ADDRESS, "Is not DEV ADDRESS");
         DEV_ADDRESS = newDevAddress;
     }
 
@@ -294,11 +294,11 @@ contract KukuSwapPresale is ReentrancyGuard {
 
         IKukuSwapStaking(PRESALE_FEE_INFO.BASE_FEE_ADDRESS).createDistribution(kukuBaseFee, address(PRESALE_INFO.B_TOKEN));
 
-        // burn unsold tokens
+        // send back unsold tokens
         uint256 remainingSBalance = PRESALE_INFO.S_TOKEN.balanceOf(address(this));
         if (remainingSBalance > STATUS.TOTAL_TOKENS_SOLD) {
-            uint256 burnAmount = remainingSBalance.sub(STATUS.TOTAL_TOKENS_SOLD);
-            TransferHelper.safeTransfer(address(PRESALE_INFO.S_TOKEN), 0x000000000000000000000000000000000000dEaD, burnAmount);
+            uint256 sendAmount = remainingSBalance.sub(STATUS.TOTAL_TOKENS_SOLD);
+            TransferHelper.safeTransfer(address(PRESALE_INFO.S_TOKEN), PRESALE_INFO.PRESALE_OWNER, sendAmount);
         }
 
         // send remaining base tokens to presale owner
